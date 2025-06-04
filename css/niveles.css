@@ -1,0 +1,357 @@
+/* Estilos específicos para la página de niveles */
+
+/* Variables adicionales para niveles */
+:root {
+  --nivel-primaria: #ff6b6b;
+  --nivel-secundaria: #4ecdc4;
+  --nivel-bachillerato: #45b7d1;
+  --nivel-fp-basica: #96ceb4;
+  --nivel-fp-medio: #feca57;
+  --nivel-fp-superior: #ff9ff3;
+  --nivel-universidad: #54a0ff;
+  --nivel-default: #778ca3;
+}
+
+/* Main container */
+.niveles-main {
+  min-height: 100vh;
+  background-color: var(--background-color);
+}
+
+/* Hero Section */
+.niveles-hero {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: var(--white);
+  padding: var(--spacing-xl) 5%;
+  text-align: center;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 700;
+}
+
+.hero-description {
+  font-size: 1.2rem;
+  max-width: 50rem;
+  margin: 0 auto;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  background-color: var(--white);
+  padding: var(--spacing-sm) 5%;
+  border-bottom: 1px solid #e0e6ed;
+}
+
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.breadcrumb-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-link:hover {
+  color: var(--secondary-color);
+}
+
+.breadcrumb-separator {
+  margin: 0 var(--spacing-sm);
+  color: var(--light-text);
+}
+
+.breadcrumb-current {
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+/* Niveles Section */
+.niveles-section {
+  padding: var(--spacing-xl) 5%;
+}
+
+.niveles-container {
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+.niveles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Nivel Cards */
+.nivel-card {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.nivel-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--primary-color);
+  transition: all 0.3s ease;
+}
+
+.nivel-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.nivel-card:hover::before {
+  height: 6px;
+}
+
+/* Colores específicos para cada nivel */
+.nivel-primaria::before {
+  background: var(--nivel-primaria);
+}
+.nivel-secundaria::before {
+  background: var(--nivel-secundaria);
+}
+.nivel-bachillerato::before {
+  background: var(--nivel-bachillerato);
+}
+.nivel-fp-basica::before {
+  background: var(--nivel-fp-basica);
+}
+.nivel-fp-medio::before {
+  background: var(--nivel-fp-medio);
+}
+.nivel-fp-superior::before {
+  background: var(--nivel-fp-superior);
+}
+.nivel-universidad::before {
+  background: var(--nivel-universidad);
+}
+.nivel-default::before {
+  background: var(--nivel-default);
+}
+
+.nivel-icon {
+  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-sm);
+  text-align: center;
+}
+
+.nivel-icon i {
+  font-size: 3rem;
+  color: var(--primary-color);
+  transition: all 0.3s ease;
+}
+
+.nivel-primaria .nivel-icon i {
+  color: var(--nivel-primaria);
+}
+.nivel-secundaria .nivel-icon i {
+  color: var(--nivel-secundaria);
+}
+.nivel-bachillerato .nivel-icon i {
+  color: var(--nivel-bachillerato);
+}
+.nivel-fp-basica .nivel-icon i {
+  color: var(--nivel-fp-basica);
+}
+.nivel-fp-medio .nivel-icon i {
+  color: var(--nivel-fp-medio);
+}
+.nivel-fp-superior .nivel-icon i {
+  color: var(--nivel-fp-superior);
+}
+.nivel-universidad .nivel-icon i {
+  color: var(--nivel-universidad);
+}
+.nivel-default .nivel-icon i {
+  color: var(--nivel-default);
+}
+
+.nivel-content {
+  padding: 0 var(--spacing-md) var(--spacing-md);
+  flex-grow: 1;
+  text-align: center;
+}
+
+.nivel-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-color);
+  line-height: 1.3;
+}
+
+.nivel-description {
+  color: var(--light-text);
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.nivel-footer {
+  padding: var(--spacing-md);
+  text-align: center;
+}
+
+.nivel-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--accent-color);
+  color: var(--white);
+  padding: 0.7rem 1.5rem;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.nivel-button:hover {
+  background-color: #3a9d85;
+  color: var(--white);
+  transform: translateX(3px);
+}
+
+.nivel-button i {
+  transition: transform 0.3s ease;
+}
+
+.nivel-button:hover i {
+  transform: translateX(3px);
+}
+
+/* No niveles message */
+.no-niveles {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--light-text);
+}
+
+.no-niveles i {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--accent-color);
+}
+
+.no-niveles h3 {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-color);
+}
+
+/* Info Section */
+.info-section {
+  background-color: #f8fafc;
+  padding: var(--spacing-xl) 5%;
+}
+
+.info-container {
+  max-width: 60rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.info-card {
+  background: var(--white);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius);
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-3px);
+}
+
+.info-icon {
+  margin-bottom: var(--spacing-md);
+}
+
+.info-icon i {
+  font-size: 2.5rem;
+  color: var(--accent-color);
+}
+
+.info-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-color);
+}
+
+.info-card p {
+  color: var(--light-text);
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-description {
+    font-size: 1.1rem;
+  }
+
+  .niveles-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .nivel-card {
+    margin: 0 auto;
+    max-width: 25rem;
+  }
+
+  .breadcrumb-container {
+    font-size: 0.8rem;
+  }
+
+  .info-container {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .nivel-icon i {
+    font-size: 2.5rem;
+  }
+
+  .nivel-title {
+    font-size: 1.1rem;
+  }
+
+  .nivel-description {
+    font-size: 0.9rem;
+  }
+}

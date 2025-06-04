@@ -1,0 +1,74 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo circular suave -->
+  <circle cx="200" cy="200" r="180" fill="#f0f4f8" opacity="0.5"/>
+  
+  <!-- Libros apilados -->
+  <rect x="120" y="280" width="60" height="8" rx="2" fill="#4a6fa5"/>
+  <rect x="125" y="272" width="50" height="8" rx="2" fill="#166088"/>
+  <rect x="130" y="264" width="40" height="8" rx="2" fill="#47b39d"/>
+  <rect x="135" y="256" width="30" height="8" rx="2" fill="#c5192d"/>
+  
+  <!-- Libro abierto central -->
+  <path d="M160 220 L160 260 L200 250 L240 260 L240 220 L200 210 Z" fill="#ffffff" stroke="#4a6fa5" stroke-width="2"/>
+  <line x1="200" y1="210" x2="200" y2="250" stroke="#4a6fa5" stroke-width="1"/>
+  
+  <!-- Páginas del libro -->
+  <path d="M170 230 L190 228" stroke="#166088" stroke-width="1" opacity="0.6"/>
+  <path d="M170 235 L185 233" stroke="#166088" stroke-width="1" opacity="0.6"/>
+  <path d="M210 228 L230 230" stroke="#166088" stroke-width="1" opacity="0.6"/>
+  <path d="M215 233 L230 235" stroke="#166088" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Graduación hat -->
+  <rect x="180" y="180" width="40" height="4" rx="2" fill="#2c3e50"/>
+  <polygon points="160,184 240,184 200,174" fill="#2c3e50"/>
+  <circle cx="240" cy="184" r="2" fill="#c5192d"/>
+  <line x1="240" y1="184" x2="250" y2="174" stroke="#c5192d" stroke-width="1"/>
+  
+  <!-- Personas estudiando -->
+  <!-- Persona 1 -->
+  <circle cx="120" cy="160" r="12" fill="#fdbcb4"/>
+  <rect x="108" y="172" width="24" height="30" rx="12" fill="#4a6fa5"/>
+  <rect x="100" y="185" width="8" height="15" rx="4" fill="#fdbcb4"/>
+  <rect x="132" y="185" width="8" height="15" rx="4" fill="#fdbcb4"/>
+  
+  <!-- Persona 2 -->
+  <circle cx="280" cy="160" r="12" fill="#d4a574"/>
+  <rect x="268" y="172" width="24" height="30" rx="12" fill="#47b39d"/>
+  <rect x="260" y="185" width="8" height="15" rx="4" fill="#d4a574"/>
+  <rect x="292" y="185" width="8" height="15" rx="4" fill="#d4a574"/>
+  
+  <!-- Globo terráqueo -->
+  <circle cx="320" cy="120" r="25" fill="#47b39d" opacity="0.8"/>
+  <path d="M300 120 Q310 110 320 120 Q330 130 340 120" stroke="#ffffff" stroke-width="2" fill="none"/>
+  <path d="M305 130 Q315 125 325 130" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+  <path d="M310 110 Q320 115 330 110" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+  
+  <!-- Bombilla de idea -->
+  <circle cx="80" cy="120" r="15" fill="#fff3cd" stroke="#ffc107" stroke-width="2"/>
+  <rect x="75" y="135" width="10" height="8" rx="2" fill="#6c757d"/>
+  <line x1="70" y1="105" x2="75" y2="110" stroke="#ffc107" stroke-width="2"/>
+  <line x1="90" y1="105" x2="85" y2="110" stroke="#ffc107" stroke-width="2"/>
+  <line x1="65" y1="120" x2="70" y2="120" stroke="#ffc107" stroke-width="2"/>
+  <line x1="90" y1="120" x2="95" y2="120" stroke="#ffc107" stroke-width="2"/>
+  
+  <!-- Estrellas decorativas -->
+  <polygon points="50,80 52,86 58,86 53,90 55,96 50,92 45,96 47,90 42,86 48,86" fill="#ffc107" opacity="0.7"/>
+  <polygon points="350,80 352,86 358,86 353,90 355,96 350,92 345,96 347,90 342,86 348,86" fill="#ffc107" opacity="0.7"/>
+  <polygon points="60,300 62,306 68,306 63,310 65,316 60,312 55,316 57,310 52,306 58,306" fill="#ffc107" opacity="0.7"/>
+  <polygon points="340,300 342,306 348,306 343,310 345,316 340,312 335,316 337,310 332,306 338,306" fill="#ffc107" opacity="0.7"/>
+  
+  <!-- Elementos de conectividad -->
+  <circle cx="150" cy="100" r="3" fill="#47b39d" opacity="0.6"/>
+  <circle cx="250" cy="100" r="3" fill="#47b39d" opacity="0.6"/>
+  <circle cx="100" cy="200" r="3" fill="#47b39d" opacity="0.6"/>
+  <circle cx="300" cy="200" r="3" fill="#47b39d" opacity="0.6"/>
+  
+  <!-- Líneas de conexión -->
+  <line x1="150" y1="100" x2="200" y2="150" stroke="#47b39d" stroke-width="1" opacity="0.3" stroke-dasharray="3,3"/>
+  <line x1="250" y1="100" x2="200" y2="150" stroke="#47b39d" stroke-width="1" opacity="0.3" stroke-dasharray="3,3"/>
+  <line x1="100" y1="200" x2="150" y2="180" stroke="#47b39d" stroke-width="1" opacity="0.3" stroke-dasharray="3,3"/>
+  <line x1="300" y1="200" x2="250" y2="180" stroke="#47b39d" stroke-width="1" opacity="0.3" stroke-dasharray="3,3"/>
+  
+  <!-- Texto "ODS" sutil -->
+  <text x="200" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#4a6fa5" opacity="0.5">Educación para todos</text>
+</svg>

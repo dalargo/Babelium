@@ -1,0 +1,535 @@
+/* Estilos específicos para la página de materias */
+
+/* Variables adicionales para materias */
+:root {
+  --materia-spacing: 1.5rem;
+  --materia-border-radius: 0.75rem;
+  --materia-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --materia-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --obligatoria-color: #e74c3c;
+  --optativa-color: #3498db;
+}
+
+/* Main container */
+.materias-main {
+  min-height: 100vh;
+  background-color: var(--background-color);
+}
+
+/* Hero Section */
+.materias-hero {
+  color: var(--white);
+  padding: var(--spacing-xl) 5%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.materias-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  z-index: -1;
+}
+
+/* Colores específicos para hero según nivel */
+.materias-hero.nivel-primaria::before {
+  background: linear-gradient(135deg, var(--nivel-primaria) 0%, #e55656 100%);
+}
+.materias-hero.nivel-secundaria::before {
+  background: linear-gradient(135deg, var(--nivel-secundaria) 0%, #3db8b0 100%);
+}
+.materias-hero.nivel-bachillerato::before {
+  background: linear-gradient(135deg, var(--nivel-bachillerato) 0%, #3a9bc1 100%);
+}
+.materias-hero.nivel-fp-basica::before {
+  background: linear-gradient(135deg, var(--nivel-fp-basica) 0%, #7fb89a 100%);
+}
+.materias-hero.nivel-fp-medio::before {
+  background: linear-gradient(135deg, var(--nivel-fp-medio) 0%, #e6b547 100%);
+}
+.materias-hero.nivel-fp-superior::before {
+  background: linear-gradient(135deg, var(--nivel-fp-superior) 0%, #e68fe3 100%);
+}
+.materias-hero.nivel-universidad::before {
+  background: linear-gradient(135deg, var(--nivel-universidad) 0%, #4a90e2 100%);
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  backdrop-filter: blur(10px);
+}
+
+.hero-content h1 {
+  font-size: 2.8rem;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 700;
+}
+
+.hero-rama {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+}
+
+.hero-description {
+  font-size: 1.2rem;
+  max-width: 50rem;
+  margin: 0 auto var(--spacing-md);
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(10px);
+  font-size: 0.9rem;
+}
+
+.stat i {
+  font-size: 1.1rem;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  background-color: var(--white);
+  padding: var(--spacing-sm) 5%;
+  border-bottom: 1px solid #e0e6ed;
+}
+
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-link:hover {
+  color: var(--secondary-color);
+}
+
+.breadcrumb-separator {
+  margin: 0 var(--spacing-sm);
+  color: var(--light-text);
+}
+
+.breadcrumb-current {
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+/* Materias Section */
+.materias-section {
+  padding: var(--spacing-xl) 5%;
+}
+
+.materias-container {
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+/* Grupos de materias */
+.materias-group {
+  margin-bottom: var(--spacing-xl);
+}
+
+.group-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.group-header h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.group-header p {
+  font-size: 1.1rem;
+  color: var(--light-text);
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+/* Materias Grid */
+.materias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: var(--materia-spacing);
+}
+
+/* Materia Cards */
+.materia-card {
+  background: var(--white);
+  border-radius: var(--materia-border-radius);
+  box-shadow: var(--materia-shadow);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.materia-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--primary-color);
+  transition: all 0.3s ease;
+}
+
+.materia-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--materia-shadow-hover);
+}
+
+.materia-card:hover::before {
+  height: 6px;
+}
+
+/* Colores específicos para materia cards */
+.materia-card.nivel-primaria::before {
+  background: var(--nivel-primaria);
+}
+.materia-card.nivel-secundaria::before {
+  background: var(--nivel-secundaria);
+}
+.materia-card.nivel-bachillerato::before {
+  background: var(--nivel-bachillerato);
+}
+.materia-card.nivel-fp-basica::before {
+  background: var(--nivel-fp-basica);
+}
+.materia-card.nivel-fp-medio::before {
+  background: var(--nivel-fp-medio);
+}
+.materia-card.nivel-fp-superior::before {
+  background: var(--nivel-fp-superior);
+}
+.materia-card.nivel-universidad::before {
+  background: var(--nivel-universidad);
+}
+
+/* Badge de materia */
+.materia-badge {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background: var(--obligatoria-color);
+  color: var(--white);
+  padding: 0.3rem 0.7rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  z-index: 2;
+}
+
+.optativa-badge {
+  background: var(--optativa-color);
+}
+
+.materia-icon {
+  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-sm);
+  text-align: center;
+  margin-top: var(--spacing-md);
+}
+
+.materia-icon i {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  transition: all 0.3s ease;
+}
+
+.materia-card.nivel-primaria .materia-icon i {
+  color: var(--nivel-primaria);
+}
+.materia-card.nivel-secundaria .materia-icon i {
+  color: var(--nivel-secundaria);
+}
+.materia-card.nivel-bachillerato .materia-icon i {
+  color: var(--nivel-bachillerato);
+}
+.materia-card.nivel-fp-basica .materia-icon i {
+  color: var(--nivel-fp-basica);
+}
+.materia-card.nivel-fp-medio .materia-icon i {
+  color: var(--nivel-fp-medio);
+}
+.materia-card.nivel-fp-superior .materia-icon i {
+  color: var(--nivel-fp-superior);
+}
+.materia-card.nivel-universidad .materia-icon i {
+  color: var(--nivel-universidad);
+}
+
+.materia-content {
+  padding: 0 var(--spacing-md) var(--spacing-md);
+  flex-grow: 1;
+  text-align: center;
+}
+
+.materia-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-color);
+  line-height: 1.3;
+}
+
+.materia-description {
+  color: var(--light-text);
+  line-height: 1.5;
+  font-size: 0.95rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.materia-creditos {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #f8fafc;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--border-radius);
+  font-size: 0.85rem;
+  color: var(--light-text);
+  font-weight: 500;
+}
+
+.materia-footer {
+  padding: var(--spacing-md);
+  text-align: center;
+}
+
+.materia-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--accent-color);
+  color: var(--white);
+  padding: 0.7rem 1.5rem;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  width: 100%;
+  justify-content: center;
+}
+
+.materia-button:hover {
+  background-color: #3a9d85;
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.materia-button i {
+  transition: transform 0.3s ease;
+}
+
+.materia-button:hover i {
+  transform: translateX(3px);
+}
+
+/* No materias message */
+.no-materias {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--light-text);
+}
+
+.no-materias i {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--accent-color);
+}
+
+.no-materias h3 {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-color);
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: var(--spacing-md);
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: var(--secondary-color);
+  color: var(--white);
+  transform: translateX(-3px);
+}
+
+/* Info adicional */
+.info-adicional {
+  background-color: #f8fafc;
+  padding: var(--spacing-xl) 5%;
+}
+
+.info-container {
+  max-width: 60rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.info-card {
+  background: var(--white);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius);
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-3px);
+}
+
+.info-icon {
+  margin-bottom: var(--spacing-md);
+}
+
+.info-icon i {
+  font-size: 2.5rem;
+  color: var(--accent-color);
+}
+
+.info-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-color);
+}
+
+.info-card p {
+  color: var(--light-text);
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-description {
+    font-size: 1.1rem;
+  }
+
+  .hero-stats {
+    gap: var(--spacing-md);
+  }
+
+  .materias-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .group-header h2 {
+    font-size: 1.6rem;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .breadcrumb-container {
+    font-size: 0.8rem;
+  }
+
+  .info-container {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .stat {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .materia-icon i {
+    font-size: 2rem;
+  }
+
+  .materia-title {
+    font-size: 1.1rem;
+  }
+
+  .hero-stats {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .breadcrumb-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+
+  .breadcrumb-separator {
+    display: none;
+  }
+}

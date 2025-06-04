@@ -1,0 +1,157 @@
+erDiagram
+    USUARIOS {
+        int id PK
+        varchar tipo "alumno/profesor/admin"
+        varchar identificador "NIA o DNI"
+        varchar nombre
+        varchar apellidos
+        varchar email
+        varchar password
+        varchar foto
+        datetime fecha_registro
+        boolean activo
+    }
+    
+    NIVELES_EDUCATIVOS {
+        int id PK
+        varchar nombre "Primaria, ESO, etc."
+        varchar descripcion
+        int orden
+        boolean activo
+    }
+    
+    CURSOS {
+        int id PK
+        int nivel_id FK
+        varchar nombre "1º, 2º, etc."
+        varchar descripcion
+        int orden
+        boolean activo
+    }
+    
+    RAMAS {
+        int id PK
+        int nivel_id FK
+        varchar nombre "Humanidades, Científico, etc."
+        varchar descripcion
+        boolean activo
+    }
+    
+    MODALIDADES_CURSO {
+        int id PK
+        int curso_id FK
+        int rama_id FK
+        varchar nombre
+        varchar descripcion
+        boolean activo
+    }
+    
+    MATERIAS {
+        int id PK
+        int modalidad_curso_id FK
+        varchar nombre
+        varchar descripcion
+        int creditos
+        boolean obligatoria
+        boolean activo
+    }
+    
+    TEMAS {
+        int id PK
+        int materia_id FK
+        varchar titulo
+        varchar descripcion
+        int orden
+        boolean activo
+    }
+    
+    CONTENIDOS {
+        int id PK
+        int tema_id FK
+        varchar tipo "texto/imagen/video/archivo"
+        varchar titulo
+        text contenido
+        varchar url "Para imágenes/videos"
+        int orden
+        datetime fecha_creacion
+        int creador_id FK
+        boolean activo
+    }
+    
+    MATRICULAS {
+        int id PK
+        int usuario_id FK
+        int modalidad_curso_id FK
+        datetime fecha_matricula
+        boolean activo
+    }
+    
+    ASIGNACIONES_PROFESOR {
+        int id PK
+        int profesor_id FK
+        int materia_id FK
+        datetime fecha_asignacion
+        boolean activo
+    }
+    
+    PROGRESO_ALUMNO {
+        int id PK
+        int usuario_id FK
+        int contenido_id FK
+        boolean completado
+        int puntuacion
+        datetime fecha_ultimo_acceso
+    }
+    
+    COMENTARIOS {
+        int id PK
+        int usuario_id FK
+        int contenido_id FK
+        text comentario
+        datetime fecha_comentario
+        boolean activo
+    }
+    
+    CAMPOS_DINAMICOS {
+        int id PK
+        varchar nombre
+        varchar tipo "texto/imagen/archivo"
+        varchar entidad "materia/tema/contenido"
+        int entidad_id
+        boolean activo
+    }
+    
+    VALORES_CAMPOS_DINAMICOS {
+        int id PK
+        int campo_id FK
+        text valor
+        varchar url
+        datetime fecha_creacion
+        int creador_id FK
+    }
+    
+    USUARIOS ||--o{ MATRICULAS : "se matricula"
+    USUARIOS ||--o{ ASIGNACIONES_PROFESOR : "es asignado"
+    USUARIOS ||--o{ PROGRESO_ALUMNO : "registra progreso"
+    USUARIOS ||--o{ COMENTARIOS : "realiza"
+    USUARIOS ||--o{ CONTENIDOS : "crea"
+    USUARIOS ||--o{ VALORES_CAMPOS_DINAMICOS : "crea"
+    
+    NIVELES_EDUCATIVOS ||--o{ CURSOS : "contiene"
+    NIVELES_EDUCATIVOS ||--o{ RAMAS : "tiene"
+    
+    CURSOS ||--o{ MODALIDADES_CURSO : "ofrece"
+    RAMAS ||--o{ MODALIDADES_CURSO : "aplica a"
+    
+    MODALIDADES_CURSO ||--o{ MATERIAS : "incluye"
+    MODALIDADES_CURSO ||--o{ MATRICULAS : "tiene alumnos"
+    
+    MATERIAS ||--o{ TEMAS : "contiene"
+    MATERIAS ||--o{ ASIGNACIONES_PROFESOR : "tiene asignado"
+    
+    TEMAS ||--o{ CONTENIDOS : "incluye"
+    
+    CONTENIDOS ||--o{ PROGRESO_ALUMNO : "es estudiado"
+    CONTENIDOS ||--o{ COMENTARIOS : "recibe"
+    
+    CAMPOS_DINAMICOS ||--o{ VALORES_CAMPOS_DINAMICOS : "tiene"

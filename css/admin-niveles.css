@@ -1,0 +1,286 @@
+/* Estilos específicos para niveles */
+.nivel-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  border-left: 4px solid #3498db;
+  overflow: hidden;
+}
+
+.nivel-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.nivel-card.inactivo {
+  border-left-color: #95a5a6;
+  opacity: 0.7;
+}
+
+.nivel-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+.nivel-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 32px;
+  overflow: hidden;
+}
+
+.nivel-title .orden {
+  background-color: #3498db;
+  color: white;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.nivel-title-text {
+  flex: 1;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.nivel-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nivel-actions form {
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nivel-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  vertical-align: top;
+}
+
+.nivel-body {
+  padding: 1rem;
+}
+
+.nivel-description {
+  color: #555;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.nivel-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.nivel-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.nivel-meta-item i {
+  color: #3498db;
+}
+
+.nivel-card.inactivo .nivel-meta-item i {
+  color: #95a5a6;
+}
+
+.nivel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .nivel-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nivel-header {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .nivel-actions {
+    justify-content: flex-end;
+  }
+}
+
+.estado-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.estado-activo {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.estado-inactivo {
+  background-color: #f5f5f5;
+  color: #757575;
+}
+
+/* Estilos para las estadísticas */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card.primary {
+  border-top: 4px solid #3498db;
+}
+
+.stat-card.success {
+  border-top: 4px solid #2ecc71;
+}
+
+.stat-card.warning {
+  border-top: 4px solid #f39c12;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-icon {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.stat-card.primary .stat-icon {
+  color: #3498db;
+}
+
+.stat-card.success .stat-icon {
+  color: #2ecc71;
+}
+
+.stat-card.warning .stat-icon {
+  color: #f39c12;
+}
+
+/* Corregir colores de los botones toggle */
+.btn-secondary {
+  background-color: #dc3545; /* Rojo para desactivar */
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #c82333;
+}
+
+.btn-success {
+  background-color: #28a745; /* Verde para activar */
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+/* Estilos para checkbox en modales */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-top: 1.5rem;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  transform: scale(1.2);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+.form-row .form-group:last-child {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+/* Alineación perfecta de botones en las acciones */
+.nivel-actions form,
+.nivel-actions button {
+  vertical-align: top;
+  line-height: 1;
+}
+
+.nivel-actions .btn-sm {
+  height: 32px;
+  width: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
