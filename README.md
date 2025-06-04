@@ -174,7 +174,7 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 - 🐛 **Issues:** [GitHub Issues](https://github.com/dalargo/Babelium/issues)
 - 💬 **Discusiones:** [GitHub Discussions](https://github.com/dalargo/Babelium/discussions)
-- 📧 **Email:** tu-email@ejemplo.com
+- 📧 **Email:** dalargo.dev@gmail.com
 
 ---
 
