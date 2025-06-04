@@ -1,5 +1,5 @@
 # Configuración de base de datos
-db/config.php
+db/connection.php
 .env
 
 # Archivos temporales
