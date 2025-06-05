@@ -20,7 +20,7 @@ $usuario_actual = obtenerUsuarioActual();
             <li><a href="index.php">Inicio</a></li>
             <li><a href="niveles.php">Niveles</a></li>
             <li><a href="foro.php">Foro</a></li>
-            <li><a href="sobre.php">Sobre Nosotros</a></li>
+            <li><a href="sobre-nosotros.php">Sobre Nosotros</a></li>
             <?php if ($usuario_actual && esAdmin()): ?>
                 <li><a href="admin/dashboard.php">Admin</a></li>
             <?php endif; ?>

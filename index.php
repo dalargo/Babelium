@@ -18,7 +18,7 @@
                 <h1>Babelium</h1>
                 <p class="tagline">Educación sin límites para todos</p>
                 <p class="description">Retoma o amplía tus estudios sin barreras económicas ni temporales. Accede a todos los niveles educativos oficiales de España.</p>
-                <a href="#cursos" class="cta-button">Explorar cursos</a>
+                <a href="niveles.php" class="cta-button">Explorar cursos</a>
             </div>
             <div class="hero-image">
                 <img src="img/education-illustration.svg" alt="Ilustración de educación inclusiva">
@@ -90,7 +90,7 @@
                     </div>
                     <h3>Educación Primaria</h3>
                     <p>6-12 años</p>
-                    <a href="#" class="level-link">Ver cursos</a>
+                    <a href="cursos.php?nivel_id=1" class="level-link">Ver cursos</a>
                 </div>
                 <div class="course-level">
                     <div class="course-icon">
@@ -98,7 +98,7 @@
                     </div>
                     <h3>Educación Secundaria</h3>
                     <p>12-16 años</p>
-                    <a href="#" class="level-link">Ver cursos</a>
+                    <a href="cursos.php?nivel_id=2" class="level-link">Ver cursos</a>
                 </div>
                 <div class="course-level">
                     <div class="course-icon">
@@ -106,7 +106,7 @@
                     </div>
                     <h3>Bachillerato</h3>
                     <p>16-18 años</p>
-                    <a href="#" class="level-link">Ver cursos</a>
+                    <a href="cursos.php?nivel_id=3" class="level-link">Ver cursos</a>
                 </div>
                 <div class="course-level">
                     <div class="course-icon">
@@ -114,7 +114,7 @@
                     </div>
                     <h3>Formación Profesional</h3>
                     <p>Grado medio y superior</p>
-                    <a href="#" class="level-link">Ver cursos</a>
+                    <a href="niveles.php#nivel-fp-medio" class="level-link">Ver cursos</a>
                 </div>
                 <div class="course-level">
                     <div class="course-icon">
@@ -122,7 +122,7 @@
                     </div>
                     <h3>Universidad</h3>
                     <p>Estudios superiores</p>
-                    <a href="#" class="level-link">Ver cursos</a>
+                    <a href="cursos.php?nivel_id=7" class="level-link">Ver cursos</a>
                 </div>
             </div>
         </section>
@@ -133,8 +133,8 @@
                 <h2>Comienza tu viaje educativo hoy mismo</h2>
                 <p>Únete a miles de estudiantes que ya están ampliando sus conocimientos con Babelium.</p>
                 <div class="cta-buttons">
-                    <a href="#cursos" class="cta-button">Explorar cursos</a>
-                    <a href="#" class="secondary-button">Saber más</a>
+                    <a href="niveles.php" class="cta-button">Explorar cursos</a>
+                    <a href="sobre-nosotros.php" class="secondary-button">Saber más</a>
                 </div>
             </div>
         </section>

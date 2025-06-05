@@ -353,8 +353,10 @@ function formatearContenido($contenido) {
                                 <?php if ($contenido_index > 0): ?>
                                     <a href="contenido.php?tema_id=<?php echo $tema_id; ?>&contenido_id=<?php echo $contenidos[$contenido_index - 1]['id']; ?>" 
                                        class="nav-button prev">
-                                        <i class="fas fa-chevron-left"></i>
-                                        <span>Anterior</span>
+                                        <div class="arrow-direction">
+                                            <i class="fas fa-chevron-left aligned-icon"></i>
+                                            <span>Anterior</span>
+                                        </div>
                                         <small><?php echo htmlspecialchars($contenidos[$contenido_index - 1]['titulo']); ?></small>
                                     </a>
                                 <?php endif; ?>
@@ -362,8 +364,10 @@ function formatearContenido($contenido) {
                                 <?php if ($contenido_index < count($contenidos) - 1): ?>
                                     <a href="contenido.php?tema_id=<?php echo $tema_id; ?>&contenido_id=<?php echo $contenidos[$contenido_index + 1]['id']; ?>" 
                                        class="nav-button next">
-                                        <span>Siguiente</span>
-                                        <i class="fas fa-chevron-right"></i>
+                                        <div class="arrow-direction"> 
+                                            <span>Siguiente</span>
+                                            <i class="fas fa-chevron-right aligned-icon"></i>
+                                        </div>
                                         <small><?php echo htmlspecialchars($contenidos[$contenido_index + 1]['titulo']); ?></small>
                                     </a>
                                 <?php else: ?>

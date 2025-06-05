@@ -110,7 +110,7 @@ function getNivelColor($nombre) {
                 <?php else: ?>
                     <div class="niveles-grid">
                         <?php foreach ($niveles as $nivel): ?>
-                            <div class="nivel-card <?php echo getNivelColor($nivel['nombre']); ?>">
+                            <div class="nivel-card <?php echo getNivelColor($nivel['nombre']); ?>" id="<?php echo getNivelColor($nivel['nombre']); ?>">
                                 <div class="nivel-icon">
                                     <i class="<?php echo getNivelIcon($nivel['nombre']); ?>"></i>
                                 </div>

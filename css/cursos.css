@@ -443,12 +443,19 @@
   font-weight: 600;
   margin-top: var(--spacing-md);
   transition: all 0.3s ease;
+  line-height: 1;
 }
 
 .back-button:hover {
   background-color: var(--secondary-color);
   color: var(--white);
   transform: translateX(-3px);
+}
+
+.back-button i {
+  font-size: 1em;
+  line-height: 1;
+  vertical-align: middle;
 }
 
 /* Info adicional */

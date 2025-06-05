@@ -17,7 +17,7 @@
       <ul>
         <li><a href="niveles.php">Niveles educativos</a></li>
         <li><a href="foro.php">Foro</a></li>
-        <li><a href="sobre.php">Sobre nosotros</a></li>
+        <li><a href="sobre-nosotros.php">Sobre nosotros</a></li>
       </ul>
     </div>
 
