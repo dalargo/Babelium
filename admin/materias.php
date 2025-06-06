@@ -1,0 +1,767 @@
+<?php
+session_start();
+require_once('../db/connection.php');
+require_once '../includes/auth_check.php';
+
+// Verificar que sea administrador
+verificarAutenticacion('admin');
+
+// Procesar acciones
+$mensaje = '';
+$tipo_mensaje = '';
+
+if ($_POST) {
+    if (isset($_POST['action'])) {
+        switch ($_POST['action']) {
+            case 'create':
+                $modalidad_curso_id = (int)$_POST['modalidad_curso_id'];
+                $nombre = trim($_POST['nombre']);
+                $descripcion = trim($_POST['descripcion']);
+                $activo = isset($_POST['activo']) ? 1 : 0;
+                
+                if (!empty($nombre) && $modalidad_curso_id > 0) {
+                    // Verificar si ya existe una materia con ese nombre en la misma modalidad
+                    $stmt = $conexion->prepare("SELECT id FROM materias WHERE nombre = ? AND modalidad_curso_id = ?");
+                    $stmt->bind_param("si", $nombre, $modalidad_curso_id);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    
+                    if ($result->num_rows > 0) {
+                        $mensaje = "Ya existe una materia con ese nombre en esta modalidad";
+                        $tipo_mensaje = "error";
+                    } else {
+                        // Insertar nueva materia
+                        $stmt = $conexion->prepare("INSERT INTO materias (modalidad_curso_id, nombre, descripcion, activo) VALUES (?, ?, ?, ?)");
+                        $stmt->bind_param("issi", $modalidad_curso_id, $nombre, $descripcion, $activo);
+                        
+                        if ($stmt->execute()) {
+                            $mensaje = "Materia creada exitosamente";
+                            $tipo_mensaje = "success";
+                        } else {
+                            $mensaje = "Error al crear la materia";
+                            $tipo_mensaje = "error";
+                        }
+                    }
+                    $stmt->close();
+                }
+                break;
+                
+            case 'edit':
+                $id = (int)$_POST['id'];
+                $modalidad_curso_id = (int)$_POST['modalidad_curso_id'];
+                $nombre = trim($_POST['nombre']);
+                $descripcion = trim($_POST['descripcion']);
+                $activo = isset($_POST['activo']) ? 1 : 0;
+                
+                if ($id > 0 && !empty($nombre) && $modalidad_curso_id > 0) {
+                    // Verificar si ya existe otra materia con ese nombre en la misma modalidad
+                    $stmt = $conexion->prepare("SELECT id FROM materias WHERE nombre = ? AND modalidad_curso_id = ? AND id != ?");
+                    $stmt->bind_param("sii", $nombre, $modalidad_curso_id, $id);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    
+                    if ($result->num_rows > 0) {
+                        $mensaje = "Ya existe otra materia con ese nombre en esta modalidad";
+                        $tipo_mensaje = "error";
+                    } else {
+                        // Actualizar materia
+                        $stmt = $conexion->prepare("UPDATE materias SET modalidad_curso_id = ?, nombre = ?, descripcion = ?, activo = ? WHERE id = ?");
+                        $stmt->bind_param("isii", $modalidad_curso_id, $nombre, $descripcion, $activo, $id);
+                        
+                        if ($stmt->execute()) {
+                            $mensaje = "Materia actualizada exitosamente";
+                            $tipo_mensaje = "success";
+                        } else {
+                            $mensaje = "Error al actualizar la materia";
+                            $tipo_mensaje = "error";
+                        }
+                    }
+                    $stmt->close();
+                }
+                break;
+                
+            case 'delete':
+                $id = (int)$_POST['id'];
+                if ($id > 0) {
+                    // Verificar si hay temas asociados
+                    $stmt = $conexion->prepare("SELECT COUNT(*) as total FROM temas WHERE materia_id = ?");
+                    $stmt->bind_param("i", $id);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $row = $result->fetch_assoc();
+                    $total_temas = $row['total'];
+                    $stmt->close();
+                    
+                    // Eliminar materia (la BD maneja la cascada)
+                    $stmt = $conexion->prepare("DELETE FROM materias WHERE id = ?");
+                    $stmt->bind_param("i", $id);
+                    
+                    if ($stmt->execute()) {
+                        if ($total_temas > 0) {
+                            $mensaje = "Materia eliminada exitosamente junto con {$total_temas} tema(s) asociado(s)";
+                        } else {
+                            $mensaje = "Materia eliminada exitosamente";
+                        }
+                        $tipo_mensaje = "success";
+                    } else {
+                        $mensaje = "Error al eliminar la materia";
+                        $tipo_mensaje = "error";
+                    }
+                    $stmt->close();
+                }
+                break;
+                
+            case 'toggle':
+                $id = (int)$_POST['id'];
+                $activo = (int)$_POST['activo'];
+                $nuevo_estado = $activo ? 0 : 1;
+                
+                if ($id > 0) {
+                    $stmt = $conexion->prepare("UPDATE materias SET activo = ? WHERE id = ?");
+                    $stmt->bind_param("ii", $nuevo_estado, $id);
+                    
+                    if ($stmt->execute()) {
+                        $mensaje = "Estado de la materia actualizado exitosamente";
+                        $tipo_mensaje = "success";
+                    } else {
+                        $mensaje = "Error al actualizar el estado de la materia";
+                        $tipo_mensaje = "error";
+                    }
+                    $stmt->close();
+                }
+                break;
+        }
+    }
+}
+
+// Filtros
+$filtro_nivel = isset($_GET['nivel']) ? (int)$_GET['nivel'] : 0;
+$filtro_curso = isset($_GET['curso']) ? (int)$_GET['curso'] : 0;
+$filtro_modalidad = isset($_GET['modalidad']) ? (int)$_GET['modalidad'] : 0;
+
+// Obtener materias
+try {
+    $where_conditions = [];
+    $params = [];
+    $param_types = "";
+    
+    if ($filtro_nivel > 0) {
+        $where_conditions[] = "COALESCE(ne.id, 0) = ?";
+        $params[] = $filtro_nivel;
+        $param_types .= "i";
+    }
+    
+    if ($filtro_curso > 0) {
+        $where_conditions[] = "COALESCE(c.id, 0) = ?";
+        $params[] = $filtro_curso;
+        $param_types .= "i";
+    }
+    
+    if ($filtro_modalidad > 0) {
+        $where_conditions[] = "mat.modalidad_curso_id = ?";
+        $params[] = $filtro_modalidad;
+        $param_types .= "i";
+    }
+    
+    $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
+    
+    $query = "
+        SELECT mat.*, 
+           COALESCE(m.nombre, 'Sin modalidad') as modalidad_nombre,
+           COALESCE(c.nombre, 'Sin curso') as curso_nombre,
+           COALESCE(ne.nombre, 'Sin nivel') as nivel_nombre,
+           COALESCE(r.nombre, 'Sin rama') as rama_nombre,
+           COALESCE((SELECT COUNT(*) FROM temas WHERE materia_id = mat.id), 0) as total_temas
+    FROM materias mat
+    LEFT JOIN modalidades_curso m ON mat.modalidad_curso_id = m.id
+    LEFT JOIN cursos c ON m.curso_id = c.id
+    LEFT JOIN niveles_educativos ne ON c.nivel_id = ne.id
+    LEFT JOIN ramas r ON m.rama_id = r.id
+    $where_clause
+    ORDER BY COALESCE(ne.nombre, 'ZZZ'), COALESCE(c.nombre, 'ZZZ'), COALESCE(m.nombre, 'ZZZ'), mat.nombre
+";
+    
+    if (!empty($params)) {
+        $stmt = $conexion->prepare($query);
+        if (!$stmt) {
+            throw new Exception("Error preparando consulta: " . $conexion->error);
+        }
+        $stmt->bind_param($param_types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $materias = [];
+        while ($row = $result->fetch_assoc()) {
+            $materias[] = $row;
+        }
+        $stmt->close();
+    } else {
+        $result = $conexion->query($query);
+        if (!$result) {
+            throw new Exception("Error ejecutando consulta: " . $conexion->error);
+        }
+        $materias = [];
+        while ($row = $result->fetch_assoc()) {
+            $materias[] = $row;
+        }
+    }
+} catch (Exception $e) {
+    $materias = [];
+    $mensaje = "Error al cargar las materias: " . $e->getMessage();
+    $tipo_mensaje = "error";
+    
+    // Log del error para debugging
+    error_log("Error en materias.php: " . $e->getMessage());
+}
+
+// Obtener niveles para filtros
+try {
+    $result = $conexion->query("SELECT id, nombre FROM niveles_educativos WHERE activo = 1 ORDER BY nombre");
+    $niveles = [];
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $niveles[] = $row;
+        }
+    }
+} catch (Exception $e) {
+    $niveles = [];
+}
+
+// Obtener cursos para filtros
+try {
+    $query_cursos = "
+    SELECT c.id, c.nombre, COALESCE(ne.nombre, 'Sin nivel') as nivel_nombre
+    FROM cursos c
+    LEFT JOIN niveles_educativos ne ON c.nivel_id = ne.id
+    WHERE c.activo = 1
+    ORDER BY COALESCE(ne.nombre, 'ZZZ'), c.nombre
+";
+    $result = $conexion->query($query_cursos);
+    $cursos = [];
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $cursos[] = $row;
+        }
+    }
+} catch (Exception $e) {
+    $cursos = [];
+}
+
+// Obtener modalidades para filtros y formularios
+try {
+    $query_modalidades = "
+    SELECT m.id, m.nombre, COALESCE(c.nombre, 'Sin curso') as curso_nombre, COALESCE(ne.nombre, 'Sin nivel') as nivel_nombre, COALESCE(r.nombre, 'Sin rama') as rama_nombre
+    FROM modalidades_curso m
+    LEFT JOIN cursos c ON m.curso_id = c.id
+    LEFT JOIN niveles_educativos ne ON c.nivel_id = ne.id
+    LEFT JOIN ramas r ON m.rama_id = r.id
+    WHERE m.activo = 1
+    ORDER BY COALESCE(ne.nombre, 'ZZZ'), COALESCE(c.nombre, 'ZZZ'), COALESCE(r.nombre, 'ZZZ'), m.nombre
+";
+    $result = $conexion->query($query_modalidades);
+    $modalidades = [];
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $modalidades[] = $row;
+        }
+    }
+} catch (Exception $e) {
+    $modalidades = [];
+}
+
+// Estadísticas
+$total_materias = count($materias);
+$materias_activas = array_filter($materias, function($materia) {
+    return $materia['activo'] == 1;
+});
+$total_activas = count($materias_activas);
+$total_inactivas = $total_materias - $total_activas;
+
+$colores_predefinidos = [
+    '#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe',
+    '#43e97b', '#38f9d7', '#ffecd2', '#fcb69f', '#a8edea', '#fed6e3',
+    '#ff9a9e', '#fecfef', '#ffeaa7', '#fab1a0', '#74b9ff', '#0984e3'
+];
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/admin-materias.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <title>Gestión de Materias - Babelium Admin</title>
+</head>
+<body>
+    <?php include_once "../includes/admin_header.php" ?>
+
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h3>
+                    <i class="fas fa-cogs"></i>
+                    Panel de Control
+                </h3>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <!-- Dashboard -->
+                <a href="dashboard.php" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                
+                <!-- Gestión de Usuarios -->
+                <a href="usuarios.php" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Usuarios</span>
+                </a>
+                
+                <!-- Separador -->
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 1rem 0;"></div>
+                
+                <!-- Gestión Académica -->
+                <div style="padding: 0.5rem 1.5rem; color: rgba(255,255,255,0.6); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">
+                    Gestión Académica
+                </div>
+                
+                <a href="niveles.php" class="nav-item">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Niveles Educativos</span>
+                </a>
+                
+                <a href="cursos.php" class="nav-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Cursos</span>
+                </a>
+                
+                <a href="modalidades.php" class="nav-item">
+                    <i class="fas fa-sitemap"></i>
+                    <span>Modalidades</span>
+                </a>
+                
+                <a href="materias.php" class="nav-item active">
+                    <i class="fas fa-book"></i>
+                    <span>Materias</span>
+                </a>
+                
+                <a href="temas.php" class="nav-item">
+                    <i class="fas fa-list"></i>
+                    <span>Temas</span>
+                </a>
+                
+                <!-- Separador -->
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 1rem 0;"></div>
+                
+                <!-- Gestión de Contenidos -->
+                <div style="padding: 0.5rem 1.5rem; color: rgba(255,255,255,0.6); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">
+                    Contenidos
+                </div>
+                
+                <a href="contenidos.php" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Gestión de Contenidos</span>
+                </a>
+                
+                <!-- Separador -->
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 1rem 0;"></div>
+                
+                <!-- Herramientas -->
+                <div style="padding: 0.5rem 1.5rem; color: rgba(255,255,255,0.6); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">
+                    Herramientas
+                </div>
+                
+                <a href="estructura.php" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>Vista de Estructura</span>
+                </a>
+                
+                <a href="configuracion.php" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Configuración</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1>Gestión de Materias</h1>
+                <p>Administra las materias de las modalidades</p>
+            </div>
+
+            <!-- Mensajes -->
+            <?php if (!empty($mensaje)): ?>
+                <div class="alert alert-<?php echo $tipo_mensaje; ?>">
+                    <i class="fas fa-<?php echo $tipo_mensaje === 'success' ? 'check-circle' : 'exclamation-triangle'; ?>"></i>
+                    <?php echo htmlspecialchars($mensaje); ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- Filtros -->
+            <div class="content-filters">
+                <form method="GET" class="filters-form">
+                    <div class="filter-group">
+                        <label for="nivel">Nivel Educativo:</label>
+                        <select name="nivel" id="nivel">
+                            <option value="">Todos los niveles</option>
+                            <?php foreach ($niveles as $nivel): ?>
+                                <option value="<?php echo $nivel['id']; ?>" <?php echo $filtro_nivel == $nivel['id'] ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($nivel['nombre']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="curso">Curso:</label>
+                        <select name="curso" id="curso">
+                            <option value="">Todos los cursos</option>
+                            <?php foreach ($cursos as $curso): ?>
+                                <option value="<?php echo $curso['id']; ?>" <?php echo $filtro_curso == $curso['id'] ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($curso['nivel_nombre'] . ' - ' . $curso['nombre']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="modalidad">Modalidad:</label>
+                        <select name="modalidad" id="modalidad">
+                            <option value="">Todas las modalidades</option>
+                            <?php foreach ($modalidades as $modalidad): ?>
+                                <option value="<?php echo $modalidad['id']; ?>" <?php echo $filtro_modalidad == $modalidad['id'] ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($modalidad['nivel_nombre'] . ' - ' . $modalidad['curso_nombre'] . ' - ' . $modalidad['rama_nombre'] . ' - ' . $modalidad['nombre']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter"></i> Filtrar
+                        </button>
+                        <a href="materias.php" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Limpiar
+                        </a>
+                    </div>
+                </form>
+
+                <div class="content-actions">
+                    <button onclick="openModal('createModal')" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Nueva Materia
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="stats-container">
+                <div class="stat-card primary">
+                    <div class="stat-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-number"><?php echo $total_materias; ?></div>
+                    <div class="stat-label">Materias Totales</div>
+                </div>
+                
+                <div class="stat-card success">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-number"><?php echo $total_activas; ?></div>
+                    <div class="stat-label">Materias Activas</div>
+                </div>
+                
+                <div class="stat-card warning">
+                    <div class="stat-icon">
+                        <i class="fas fa-pause-circle"></i>
+                    </div>
+                    <div class="stat-number"><?php echo $total_inactivas; ?></div>
+                    <div class="stat-label">Materias Inactivas</div>
+                </div>
+            </div>
+
+            <!-- Lista de materias -->
+            <div class="materia-grid">
+                <?php if (empty($materias)): ?>
+                    <div class="no-data">
+                        <i class="fas fa-inbox"></i>
+                        <p>No se encontraron materias</p>
+                        <small>Crea una nueva materia para empezar</small>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($materias as $materia): ?>
+                        <div class="materia-card <?php echo $materia['activo'] ? '' : 'inactivo'; ?>" style="border-left-color: <?php echo isset($materia['color']) ? htmlspecialchars($materia['color']) : '#667eea'; ?>">
+                            <div class="materia-header">
+                                <div class="materia-title">
+                                    <div class="color-indicator" style="background-color: <?php echo isset($materia['color']) ? htmlspecialchars($materia['color']) : '#667eea'; ?>"></div>
+                                    <span class="materia-title-text"><?php echo htmlspecialchars($materia['nombre']); ?></span>
+                                </div>
+                                <div class="materia-actions">
+                                    <button onclick="editMateria(<?php echo json_encode($materia); ?>)" class="btn btn-sm btn-primary" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    
+                                    <form method="POST" style="display: inline;">
+                                        <input type="hidden" name="action" value="toggle">
+                                        <input type="hidden" name="id" value="<?php echo $materia['id']; ?>">
+                                        <input type="hidden" name="activo" value="<?php echo $materia['activo']; ?>">
+                                        <button type="submit" class="btn btn-sm <?php echo $materia['activo'] ? 'btn-success' : 'btn-secondary'; ?>" title="<?php echo $materia['activo'] ? 'Desactivar' : 'Activar'; ?>">
+                                            <i class="fas fa-<?php echo $materia['activo'] ? 'toggle-on' : 'toggle-off'; ?>"></i>
+                                        </button>
+                                    </form>
+                                    
+                                    <button onclick="deleteMateria(<?php echo $materia['id']; ?>, <?php echo json_encode($materia['nombre']); ?>, <?php echo $materia['total_temas']; ?>)" class="btn btn-sm btn-danger" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="materia-body">
+                                <div class="materia-badges">
+                                    <span class="nivel-badge"><?php echo htmlspecialchars($materia['nivel_nombre']); ?></span>
+                                    <span class="curso-badge"><?php echo htmlspecialchars($materia['curso_nombre']); ?></span>
+                                    <span class="modalidad-badge"><?php echo htmlspecialchars($materia['modalidad_nombre']); ?></span>
+                                    <span class="rama-badge"><?php echo htmlspecialchars($materia['rama_nombre']); ?></span>
+                                </div>
+                                <div class="materia-description">
+                                    <?php echo !empty($materia['descripcion']) ? htmlspecialchars($materia['descripcion']) : '<em>Sin descripción</em>'; ?>
+                                </div>
+                                <div class="materia-meta">
+                                    <div class="materia-meta-item">
+                                        <i class="fas fa-list"></i>
+                                        <span><?php echo $materia['total_temas']; ?> temas</span>
+                                    </div>
+                                    <div class="materia-meta-item">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>Creado: <?php echo isset($materia['fecha_creacion']) ? date('d/m/Y', strtotime($materia['fecha_creacion'])) : 'N/A'; ?></span>
+                                    </div>
+                                    <div class="materia-meta-item">
+                                        <span class="estado-badge <?php echo $materia['activo'] ? 'estado-activo' : 'estado-inactivo'; ?>">
+                                            <?php echo $materia['activo'] ? 'Activo' : 'Inactivo'; ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para crear materia -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus"></i> Nueva Materia</h3>
+                <button onclick="closeModal('createModal')" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form method="POST" class="modal-form">
+                <input type="hidden" name="action" value="create">
+                
+                <div class="form-group">
+                    <label for="create_modalidad_curso_id">Modalidad *</label>
+                    <select name="modalidad_curso_id" id="create_modalidad_curso_id" required>
+                        <option value="">Seleccionar modalidad</option>
+                        <?php foreach ($modalidades as $modalidad): ?>
+                            <option value="<?php echo $modalidad['id']; ?>">
+                                <?php echo htmlspecialchars($modalidad['nivel_nombre'] . ' - ' . $modalidad['curso_nombre'] . ' - ' . $modalidad['rama_nombre'] . ' - ' . $modalidad['nombre']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="create_nombre">Nombre de la Materia *</label>
+                    <input type="text" name="nombre" id="create_nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="create_descripcion">Descripción</label>
+                    <textarea name="descripcion" id="create_descripcion" rows="3" placeholder="Descripción de la materia..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="activo" checked>
+                        <span>Activo</span>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('createModal')" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Crear Materia
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para editar materia -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Editar Materia</h3>
+                <button onclick="closeModal('editModal')" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form method="POST" class="modal-form">
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="id" id="edit_id">
+                
+                <div class="form-group">
+                    <label for="edit_modalidad_curso_id">Modalidad *</label>
+                    <select name="modalidad_curso_id" id="edit_modalidad_curso_id" required>
+                        <option value="">Seleccionar modalidad</option>
+                        <?php foreach ($modalidades as $modalidad): ?>
+                            <option value="<?php echo $modalidad['id']; ?>">
+                                <?php echo htmlspecialchars($modalidad['nivel_nombre'] . ' - ' . $modalidad['curso_nombre'] . ' - ' . $modalidad['rama_nombre'] . ' - ' . $modalidad['nombre']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_nombre">Nombre de la Materia *</label>
+                    <input type="text" name="nombre" id="edit_nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_descripcion">Descripción</label>
+                    <textarea name="descripcion" id="edit_descripcion" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="activo" id="edit_activo">
+                        <span>Activo</span>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('editModal')" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Actualizar Materia
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación</h3>
+                <button onclick="closeModal('deleteModal')" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar la materia <strong id="deleteMateriaTitle"></strong>?</p>
+                <p class="warning-text">Esta acción no se puede deshacer.</p>
+            </div>
+            <form method="POST" class="modal-form">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="id" id="delete_id">
+                
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('deleteModal')" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <?php include 'footer.php'; ?>
+
+    <script>
+        // Funciones para modales
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Función para establecer color
+        function setColor(inputId, color) {
+            document.getElementById(inputId).value = color;
+        }
+
+        // Función para editar materia
+        function editMateria(materia) {
+            document.getElementById('edit_id').value = materia.id;
+            document.getElementById('edit_modalidad_curso_id').value = materia.modalidad_curso_id;
+            document.getElementById('edit_nombre').value = materia.nombre;
+            document.getElementById('edit_descripcion').value = materia.descripcion || '';
+            openModal('editModal');
+        }
+
+        // Función para eliminar materia
+        function deleteMateria(id, nombre, totalTemas) {
+            document.getElementById('delete_id').value = id;
+            document.getElementById('deleteMateriaTitle').textContent = nombre;
+            
+            // Actualizar el mensaje según si hay temas asociados
+            const warningText = document.querySelector('#deleteModal .warning-text');
+            if (totalTemas > 0) {
+                warningText.innerHTML = `<strong>⚠️ ADVERTENCIA:</strong> Esta materia tiene ${totalTemas} tema(s) asociado(s). Al eliminarla también se eliminarán todos los temas y contenidos relacionados. Esta acción no se puede deshacer.`;
+                warningText.style.color = '#e74c3c';
+                warningText.style.fontWeight = 'bold';
+            } else {
+                warningText.textContent = 'Esta acción no se puede deshacer.';
+                warningText.style.color = '';
+                warningText.style.fontWeight = '';
+            }
+            
+            openModal('deleteModal');
+        }
+
+        // Cerrar modales al hacer click fuera
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        }
+
+        // Cerrar modales con Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (modal.style.display === 'flex') {
+                        closeModal(modal.id);
+                    }
+                });
+            }
+        });
+
+        // Auto-resize textareas
+        document.addEventListener('DOMContentLoaded', function() {
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = this.scrollHeight + 'px';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

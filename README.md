@@ -5,10 +5,13 @@ Plataforma educativa moderna para la gestión de contenidos académicos, desarro
 ## ✨ Características
 
 - 🏫 **Gestión de niveles educativos** - Primaria, ESO, Bachillerato, FP, Universidad
-- 📚 **Organización jerárquica** - Niveles → Cursos → Materias → Temas → Contenidos
+- 📚 **Organización jerárquica** - Niveles → Cursos → Modalidades → Materias → Temas → Contenidos
 - 👥 **Sistema de usuarios** - Alumnos, Profesores y Administradores
-- 🎨 **Interfaz moderna** - Diseño responsive y intuitivo
+- 🎨 **Interfaz moderna** - Diseño responsive e intuitivo
 - ⚡ **Panel de administración** - Gestión completa del contenido
+- 💬 **Foro integrado** - Comunicación entre usuarios por niveles y materias
+- 🔍 **Explorador de estructura** - Visualización de la base de datos
+- 👤 **Perfiles de usuario** - Con foto y datos personalizables
 
 ## 🚀 Instalación Rápida
 
@@ -57,6 +60,7 @@ Si prefieres instalar por partes, consulta [INSTALL.md](INSTALL.md) para instruc
 - **Frontend:** HTML5, CSS3, JavaScript
 - **Iconos:** Font Awesome 6
 - **Diseño:** CSS Grid, Flexbox
+- **Responsive:** Adaptable a móviles, tablets y escritorio
 
 ## 📂 Estructura del proyecto
 
@@ -68,20 +72,71 @@ babelium/
 ├── 📄 materias.php                 # Lista de materias
 ├── 📄 temas.php                    # Lista de temas
 ├── 📄 contenido.php                # Visualización de contenidos
-├── 📁 auth/                        # Sistema de autenticación
+├── 📄 sobre-nosotros.php           # Información sobre el proyecto
+├── 📄 foro.php                     # Sistema de foro
+├── 📄 foro-categoria.php           # Categorías del foro
+├── 📄 foro-materia.php             # Foro por materias
+├── 📄 foro-nivel.php               # Foro por niveles
+├── 📄 foro-tema.php                # Temas del foro
 ├── 📁 admin/                       # Panel de administración
-├── 📁 includes/                    # Archivos compartidos
+│   ├── 📄 dashboard.php            # Panel principal
+│   ├── 📄 usuarios.php             # Gestión de usuarios
+│   ├── 📄 niveles.php              # Gestión de niveles
+│   ├── 📄 cursos.php               # Gestión de cursos
+│   ├── 📄 modalidades.php          # Gestión de modalidades
+│   ├── 📄 materias.php             # Gestión de materias
+│   ├── 📄 temas.php                # Gestión de temas
+│   ├── 📄 contenidos.php           # Gestión de contenidos
+│   ├── 📄 estructura.php           # Explorador de BD
+│   ├── 📄 perfil.php               # Perfil de administrador
+│   └── 📄 footer.php               # Pie de página admin
+├── 📁 auth/                        # Sistema de autenticación
+│   ├── 📄 login.php                # Inicio de sesión
+│   ├── 📄 logout.php               # Cierre de sesión
+│   └── 📄 register.php             # Registro de usuarios
+├── 📁 css/                         # Estilos CSS
+│   ├── 📄 style.css                # Estilos generales
+│   ├── 📄 reset.css                # Reset CSS
+│   ├── 📄 admin.css                # Estilos de administración
+│   ├── 📄 admin-responsive.css     # Responsive para admin
+│   ├── 📄 admin-header.css         # Estilos del header admin
+│   ├── 📄 admin-common.css         # Estilos comunes admin
+│   ├── 📄 admin-estructura.css     # Estilos para estructura BD
+│   ├── 📄 admin-perfil.css         # Estilos para perfil
+│   └── 📄 foro.css                 # Estilos del foro
 ├── 📁 db/                          # Configuración de BD
-├── 📁 css/                         # Estilos organizados
-├── 📁 scripts/                     # Scripts de base de datos
-└── 📁 img/                         # Recursos gráficos
+│   ├── 📄 connection.php           # Conexión a la BD
+│   └── 📄 connection.example.php   # Ejemplo de conexión
+├── 📁 debug/                       # Herramientas de depuración
+│   └── 📄 verificar_rutas.php      # Verificador de rutas
+├── 📁 docs/                        # Documentación
+│   └── 📄 database-er-diagram.md   # Diagrama ER de la BD
+├── 📁 img/                         # Imágenes y recursos
+├── 📁 includes/                    # Archivos compartidos
+│   ├── 📄 header.php               # Cabecera del sitio
+│   ├── 📄 footer.php               # Pie de página
+│   ├── 📄 admin-header.php         # Cabecera de admin
+│   └── 📄 auth-check.php           # Verificación de auth
+├── 📁 js/                          # JavaScript
+│   ├── 📄 admin-sidebar.js         # Control del sidebar
+│   ├── 📄 niveles-animations.js    # Animaciones de niveles
+│   ├── 📄 sobre-nosotros.js        # Scripts de sobre nosotros
+│   └── 📄 foro.js                  # Funcionalidad del foro
+├── 📁 php/                         # Funciones PHP
+│   └── 📄 niveles-functions.php    # Funciones de niveles
+└── 📁 scripts/                     # Scripts SQL
+    ├── 📄 babelium_db_completa.sql # BD completa
+    ├── 📄 babelium_database_v02.sql # Versión 2 de la BD
+    ├── 📄 babelium_database_v03.sql # Versión 3 de la BD
+    ├── 📄 crear_usuarios_demo_final.sql # Usuarios demo
+    └── 📄 seed_niveles_educativos.sql # Datos de niveles
 \`\`\`
 
 ## 📱 Responsive Design
 
 - ✅ **Desktop** (1200px+) - Experiencia completa
 - ✅ **Tablet** (768px - 1199px) - Interfaz adaptada
-- ✅ **Mobile** (< 768px) - Diseño optimizado
+- ✅ **Mobile** (< 768px) - Diseño optimizado con menú hamburguesa
 
 ## 🎯 Estado del Proyecto
 
@@ -94,6 +149,10 @@ babelium/
 - [x] CSS organizado y optimizado
 - [x] Eliminación en cascada
 - [x] Exportación completa de BD
+- [x] Sistema de foro
+- [x] Explorador de estructura de BD
+- [x] Perfiles de usuario con foto
+- [x] Sidebar responsive con toggle
 
 ### 🚧 En desarrollo
 - [ ] Sistema de progreso del usuario
@@ -101,6 +160,8 @@ babelium/
 - [ ] Búsqueda avanzada
 - [ ] Notificaciones
 - [ ] Estadísticas y reportes
+- [ ] Página de contenidos específicos
+- [ ] Optimización de carga
 
 ### 🔮 Futuras mejoras
 - [ ] API REST
@@ -119,9 +180,11 @@ babelium/
    - Incluye usuarios de prueba y contenido
 
 2. **Instalación modular:**
-   - `babelium_database.sql` - Estructura de tablas
+   - `babelium_database_v03.sql` - Estructura de tablas actualizada
    - `seed_niveles_educativos.sql` - Datos de niveles
    - `crear_usuarios_demo_final.sql` - Usuarios de prueba
+   - `crear_tablas_foro.sql` - Sistema de foro
+   - `crear_tablas_intermedias.sql` - Tablas de relación
 
 ## 🚀 Despliegue
 
@@ -179,4 +242,3 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 ---
 
 ⭐ **¡Dale una estrella si te gusta el proyecto!** ⭐
-

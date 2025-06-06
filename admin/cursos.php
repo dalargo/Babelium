@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../db/connection.php';
+require_once('../db/connection.php');
 require_once '../includes/auth_check.php';
 
 // Verificar que sea administrador
@@ -14,31 +14,32 @@ if ($_POST) {
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
             case 'create':
+                $nivel_id = (int)$_POST['nivel_id'];
                 $nombre = trim($_POST['nombre']);
                 $descripcion = trim($_POST['descripcion']);
                 $orden = (int)$_POST['orden'];
                 $activo = isset($_POST['activo']) ? 1 : 0;
                 
-                if (!empty($nombre)) {
-                    // Verificar si ya existe un nivel con ese nombre
-                    $stmt = $conexion->prepare("SELECT id FROM niveles_educativos WHERE nombre = ?");
-                    $stmt->bind_param("s", $nombre);
+                if (!empty($nombre) && $nivel_id > 0) {
+                    // Verificar si ya existe un curso con ese nombre en el mismo nivel
+                    $stmt = $conexion->prepare("SELECT id FROM cursos WHERE nombre = ? AND nivel_id = ?");
+                    $stmt->bind_param("si", $nombre, $nivel_id);
                     $stmt->execute();
                     $result = $stmt->get_result();
                     
                     if ($result->num_rows > 0) {
-                        $mensaje = "Ya existe un nivel educativo con ese nombre";
+                        $mensaje = "Ya existe un curso con ese nombre en este nivel";
                         $tipo_mensaje = "error";
                     } else {
-                        // Insertar nuevo nivel
-                        $stmt = $conexion->prepare("INSERT INTO niveles_educativos (nombre, descripcion, orden, activo) VALUES (?, ?, ?, ?)");
-                        $stmt->bind_param("ssii", $nombre, $descripcion, $orden, $activo);
+                        // Insertar nuevo curso
+                        $stmt = $conexion->prepare("INSERT INTO cursos (nivel_id, nombre, descripcion, orden, activo) VALUES (?, ?, ?, ?, ?)");
+                        $stmt->bind_param("issii", $nivel_id, $nombre, $descripcion, $orden, $activo);
                         
                         if ($stmt->execute()) {
-                            $mensaje = "Nivel educativo creado exitosamente";
+                            $mensaje = "Curso creado exitosamente";
                             $tipo_mensaje = "success";
                         } else {
-                            $mensaje = "Error al crear el nivel educativo";
+                            $mensaje = "Error al crear el curso";
                             $tipo_mensaje = "error";
                         }
                     }
@@ -48,31 +49,32 @@ if ($_POST) {
                 
             case 'edit':
                 $id = (int)$_POST['id'];
+                $nivel_id = (int)$_POST['nivel_id'];
                 $nombre = trim($_POST['nombre']);
                 $descripcion = trim($_POST['descripcion']);
                 $orden = (int)$_POST['orden'];
                 $activo = isset($_POST['activo']) ? 1 : 0;
                 
-                if ($id > 0 && !empty($nombre)) {
-                    // Verificar si ya existe otro nivel con ese nombre
-                    $stmt = $conexion->prepare("SELECT id FROM niveles_educativos WHERE nombre = ? AND id != ?");
-                    $stmt->bind_param("si", $nombre, $id);
+                if ($id > 0 && !empty($nombre) && $nivel_id > 0) {
+                    // Verificar si ya existe otro curso con ese nombre en el mismo nivel
+                    $stmt = $conexion->prepare("SELECT id FROM cursos WHERE nombre = ? AND nivel_id = ? AND id != ?");
+                    $stmt->bind_param("sii", $nombre, $nivel_id, $id);
                     $stmt->execute();
                     $result = $stmt->get_result();
                     
                     if ($result->num_rows > 0) {
-                        $mensaje = "Ya existe otro nivel educativo con ese nombre";
+                        $mensaje = "Ya existe otro curso con ese nombre en este nivel";
                         $tipo_mensaje = "error";
                     } else {
-                        // Actualizar nivel
-                        $stmt = $conexion->prepare("UPDATE niveles_educativos SET nombre = ?, descripcion = ?, orden = ?, activo = ? WHERE id = ?");
-                        $stmt->bind_param("ssiii", $nombre, $descripcion, $orden, $activo, $id);
+                        // Actualizar curso
+                        $stmt = $conexion->prepare("UPDATE cursos SET nivel_id = ?, nombre = ?, descripcion = ?, orden = ?, activo = ? WHERE id = ?");
+                        $stmt->bind_param("issiii", $nivel_id, $nombre, $descripcion, $orden, $activo, $id);
                         
                         if ($stmt->execute()) {
-                            $mensaje = "Nivel educativo actualizado exitosamente";
+                            $mensaje = "Curso actualizado exitosamente";
                             $tipo_mensaje = "success";
                         } else {
-                            $mensaje = "Error al actualizar el nivel educativo";
+                            $mensaje = "Error al actualizar el curso";
                             $tipo_mensaje = "error";
                         }
                     }
@@ -83,43 +85,31 @@ if ($_POST) {
             case 'delete':
                 $id = (int)$_POST['id'];
                 if ($id > 0) {
-                    // Verificar si hay cursos asociados y mostrar advertencia
-                    $stmt = $conexion->prepare("SELECT COUNT(*) as total FROM cursos WHERE nivel_id = ?");
+                    // Verificar si hay modalidades asociadas
+                    $stmt = $conexion->prepare("SELECT COUNT(*) as total FROM modalidades_curso WHERE curso_id = ?");
                     $stmt->bind_param("i", $id);
                     $stmt->execute();
                     $result = $stmt->get_result();
                     $row = $result->fetch_assoc();
-                    $total_cursos = $row['total'];
+                    $total_modalidades = $row['total'];
                     $stmt->close();
                     
-                    // Permitir eliminación pero con advertencia si hay cursos
-                    if ($total_cursos > 0) {
-                        // Eliminar en cascada (la BD ya está configurada para esto)
-                        $stmt = $conexion->prepare("DELETE FROM niveles_educativos WHERE id = ?");
-                        $stmt->bind_param("i", $id);
-                        
-                        if ($stmt->execute()) {
-                            $mensaje = "Nivel educativo eliminado exitosamente junto con {$total_cursos} curso(s) asociado(s)";
-                            $tipo_mensaje = "success";
+                    // Eliminar curso (la BD maneja la cascada)
+                    $stmt = $conexion->prepare("DELETE FROM cursos WHERE id = ?");
+                    $stmt->bind_param("i", $id);
+                    
+                    if ($stmt->execute()) {
+                        if ($total_modalidades > 0) {
+                            $mensaje = "Curso eliminado exitosamente junto con {$total_modalidades} modalidad(es) asociada(s)";
                         } else {
-                            $mensaje = "Error al eliminar el nivel educativo";
-                            $tipo_mensaje = "error";
+                            $mensaje = "Curso eliminado exitosamente";
                         }
-                        $stmt->close();
+                        $tipo_mensaje = "success";
                     } else {
-                        // Eliminar nivel sin cursos
-                        $stmt = $conexion->prepare("DELETE FROM niveles_educativos WHERE id = ?");
-                        $stmt->bind_param("i", $id);
-                        
-                        if ($stmt->execute()) {
-                            $mensaje = "Nivel educativo eliminado exitosamente";
-                            $tipo_mensaje = "success";
-                        } else {
-                            $mensaje = "Error al eliminar el nivel educativo";
-                            $tipo_mensaje = "error";
-                        }
-                        $stmt->close();
+                        $mensaje = "Error al eliminar el curso";
+                        $tipo_mensaje = "error";
                     }
+                    $stmt->close();
                 }
                 break;
                 
@@ -129,15 +119,14 @@ if ($_POST) {
                 $nuevo_estado = $activo ? 0 : 1;
                 
                 if ($id > 0) {
-                    // Cambiar estado
-                    $stmt = $conexion->prepare("UPDATE niveles_educativos SET activo = ? WHERE id = ?");
+                    $stmt = $conexion->prepare("UPDATE cursos SET activo = ? WHERE id = ?");
                     $stmt->bind_param("ii", $nuevo_estado, $id);
                     
                     if ($stmt->execute()) {
-                        $mensaje = "Estado del nivel educativo actualizado exitosamente";
+                        $mensaje = "Estado del curso actualizado exitosamente";
                         $tipo_mensaje = "success";
                     } else {
-                        $mensaje = "Error al actualizar el estado del nivel educativo";
+                        $mensaje = "Error al actualizar el estado del curso";
                         $tipo_mensaje = "error";
                     }
                     $stmt->close();
@@ -147,18 +136,79 @@ if ($_POST) {
     }
 }
 
-// Obtener niveles educativos
+// Filtros
+$filtro_nivel = isset($_GET['nivel']) ? (int)$_GET['nivel'] : 0;
+
+// Obtener cursos
 try {
+    $where_clause = "";
+    $params = [];
+    $param_types = "";
+    
+    if ($filtro_nivel > 0) {
+        $where_clause = "WHERE c.nivel_id = ?";
+        $params[] = $filtro_nivel;
+        $param_types = "i";
+    }
+    
+    // Primero verificar si las tablas existen
+    $check_tables = $conexion->query("SHOW TABLES LIKE 'cursos'");
+    if ($check_tables->num_rows == 0) {
+        throw new Exception("La tabla 'cursos' no existe");
+    }
+    
+    $check_niveles = $conexion->query("SHOW TABLES LIKE 'niveles_educativos'");
+    if ($check_niveles->num_rows == 0) {
+        throw new Exception("La tabla 'niveles_educativos' no existe");
+    }
+    
+    // Consulta simplificada primero
     $query = "
-        SELECT ne.*, 
-               COALESCE((SELECT COUNT(*) FROM cursos WHERE nivel_id = ne.id), 0) as total_cursos
-        FROM niveles_educativos ne
-        ORDER BY ne.orden, ne.nombre
+        SELECT c.*, 
+               COALESCE(ne.nombre, 'Sin nivel') as nivel_nombre,
+               COALESCE((SELECT COUNT(*) FROM modalidades_curso WHERE curso_id = c.id), 0) as total_modalidades
+        FROM cursos c
+        LEFT JOIN niveles_educativos ne ON c.nivel_id = ne.id
+        $where_clause
+        ORDER BY COALESCE(ne.orden, 999), c.orden, c.nombre
     ";
     
-    $result = $conexion->query($query);
-    $niveles = [];
+    if (!empty($params)) {
+        $stmt = $conexion->prepare($query);
+        if (!$stmt) {
+            throw new Exception("Error preparando consulta: " . $conexion->error);
+        }
+        $stmt->bind_param($param_types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $cursos = [];
+        while ($row = $result->fetch_assoc()) {
+            $cursos[] = $row;
+        }
+        $stmt->close();
+    } else {
+        $result = $conexion->query($query);
+        if (!$result) {
+            throw new Exception("Error ejecutando consulta: " . $conexion->error);
+        }
+        $cursos = [];
+        while ($row = $result->fetch_assoc()) {
+            $cursos[] = $row;
+        }
+    }
+} catch (Exception $e) {
+    $cursos = [];
+    $mensaje = "Error al cargar los cursos: " . $e->getMessage();
+    $tipo_mensaje = "error";
     
+    // Log del error para debugging
+    error_log("Error en cursos.php: " . $e->getMessage());
+}
+
+// Obtener niveles para filtros y formularios
+try {
+    $result = $conexion->query("SELECT id, nombre, orden FROM niveles_educativos WHERE activo = 1 ORDER BY orden");
+    $niveles = [];
     if ($result) {
         while ($row = $result->fetch_assoc()) {
             $niveles[] = $row;
@@ -166,22 +216,22 @@ try {
     }
 } catch (Exception $e) {
     $niveles = [];
-    $mensaje = "Error al cargar los niveles educativos";
-    $tipo_mensaje = "error";
+    // Si no existe la tabla niveles_educativos, crear un nivel por defecto
+    $niveles = [['id' => 1, 'nombre' => 'Nivel por defecto']];
 }
 
 // Estadísticas
-$total_niveles = count($niveles);
-$niveles_activos = array_filter($niveles, function($nivel) {
-    return $nivel['activo'] == 1;
+$total_cursos = count($cursos);
+$cursos_activos = array_filter($cursos, function($curso) {
+    return $curso['activo'] == 1;
 });
-$total_activos = count($niveles_activos);
-$total_inactivos = $total_niveles - $total_activos;
+$total_activos = count($cursos_activos);
+$total_inactivos = $total_cursos - $total_activos;
 
 // Obtener el próximo orden sugerido
 $proximo_orden = 1;
-if (!empty($niveles)) {
-    $max_orden = max(array_column($niveles, 'orden'));
+if (!empty($cursos)) {
+    $max_orden = max(array_column($cursos, 'orden'));
     $proximo_orden = $max_orden + 1;
 }
 ?>
@@ -195,9 +245,9 @@ if (!empty($niveles)) {
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/admin.css">
-    <link rel="stylesheet" href="../css/admin-niveles.css">
+    <link rel="stylesheet" href="../css/admin-cursos.css">
     <link rel="stylesheet" href="../css/components.css">
-    <title>Gestión de Niveles Educativos - Babelium Admin</title>
+    <title>Gestión de Cursos - Babelium Admin</title>
 </head>
 <body>
     <?php include_once "../includes/admin_header.php" ?>
@@ -232,12 +282,12 @@ if (!empty($niveles)) {
                     Gestión Académica
                 </div>
                 
-                <a href="niveles.php" class="nav-item active">
+                <a href="niveles.php" class="nav-item">
                     <i class="fas fa-layer-group"></i>
                     <span>Niveles Educativos</span>
                 </a>
                 
-                <a href="cursos.php" class="nav-item">
+                <a href="cursos.php" class="nav-item active">
                     <i class="fas fa-graduation-cap"></i>
                     <span>Cursos</span>
                 </a>
@@ -292,8 +342,8 @@ if (!empty($niveles)) {
 
         <main class="admin-main">
             <div class="admin-header">
-                <h1>Gestión de Niveles Educativos</h1>
-                <p>Administra los niveles educativos del sistema</p>
+                <h1>Gestión de Cursos</h1>
+                <p>Administra los cursos por nivel educativo</p>
             </div>
 
             <!-- Mensajes -->
@@ -304,14 +354,46 @@ if (!empty($niveles)) {
                 </div>
             <?php endif; ?>
 
+            <!-- Filtros -->
+            <div class="content-filters">
+                <form method="GET" class="filters-form">
+                    <div class="filter-group">
+                        <label for="nivel">Nivel Educativo:</label>
+                        <select name="nivel" id="nivel">
+                            <option value="">Todos los niveles</option>
+                            <?php foreach ($niveles as $nivel): ?>
+                                <option value="<?php echo $nivel['id']; ?>" <?php echo $filtro_nivel == $nivel['id'] ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($nivel['nombre']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter"></i> Filtrar
+                        </button>
+                        <a href="cursos.php" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Limpiar
+                        </a>
+                    </div>
+                </form>
+
+                <div class="content-actions">
+                    <button onclick="openModal('createModal')" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Nuevo Curso
+                    </button>
+                </div>
+            </div>
+
             <!-- Estadísticas -->
             <div class="stats-container">
                 <div class="stat-card primary">
                     <div class="stat-icon">
-                        <i class="fas fa-layer-group"></i>
+                        <i class="fas fa-graduation-cap"></i>
                     </div>
-                    <div class="stat-number"><?php echo $total_niveles; ?></div>
-                    <div class="stat-label">Niveles Totales</div>
+                    <div class="stat-number"><?php echo $total_cursos; ?></div>
+                    <div class="stat-label">Cursos Totales</div>
                 </div>
                 
                 <div class="stat-card success">
@@ -319,7 +401,7 @@ if (!empty($niveles)) {
                         <i class="fas fa-check-circle"></i>
                     </div>
                     <div class="stat-number"><?php echo $total_activos; ?></div>
-                    <div class="stat-label">Niveles Activos</div>
+                    <div class="stat-label">Cursos Activos</div>
                 </div>
                 
                 <div class="stat-card warning">
@@ -327,68 +409,64 @@ if (!empty($niveles)) {
                         <i class="fas fa-pause-circle"></i>
                     </div>
                     <div class="stat-number"><?php echo $total_inactivos; ?></div>
-                    <div class="stat-label">Niveles Inactivos</div>
+                    <div class="stat-label">Cursos Inactivos</div>
                 </div>
             </div>
 
-            <!-- Acciones -->
-            <div class="content-actions">
-                <button onclick="openModal('createModal')" class="btn btn-success">
-                    <i class="fas fa-plus"></i> Nuevo Nivel Educativo
-                </button>
-            </div>
-
-            <!-- Lista de niveles -->
-            <div class="nivel-grid">
-                <?php if (empty($niveles)): ?>
+            <!-- Lista de cursos -->
+            <div class="curso-grid">
+                <?php if (empty($cursos)): ?>
                     <div class="no-data">
                         <i class="fas fa-inbox"></i>
-                        <p>No se encontraron niveles educativos</p>
-                        <small>Crea un nuevo nivel para empezar</small>
+                        <p>No se encontraron cursos</p>
+                        <small>Crea un nuevo curso para empezar</small>
                     </div>
                 <?php else: ?>
-                    <?php foreach ($niveles as $nivel): ?>
-                        <div class="nivel-card <?php echo $nivel['activo'] ? '' : 'inactivo'; ?>">
-                            <div class="nivel-header">
-                                <div class="nivel-title">
-                                    <span class="orden"><?php echo $nivel['orden']; ?></span>
-                                    <span class="nivel-title-text"><?php echo htmlspecialchars($nivel['nombre']); ?></span>
+                    <?php foreach ($cursos as $curso): ?>
+                        <div class="curso-card <?php echo $curso['activo'] ? '' : 'inactivo'; ?>">
+                            <div class="curso-header">
+                                <div class="curso-title">
+                                    <span class="orden"><?php echo $curso['orden']; ?></span>
+                                    <span class="curso-title-text"><?php echo htmlspecialchars($curso['nombre']); ?></span>
                                 </div>
-                                <div class="nivel-actions">
-                                    <button onclick="editNivel(<?php echo htmlspecialchars(json_encode($nivel)); ?>)" class="btn btn-sm btn-primary" title="Editar">
+                                <div class="curso-actions">
+                                    <button onclick="editCurso(<?php echo htmlspecialchars(json_encode($curso)); ?>)" class="btn btn-sm btn-primary" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     
                                     <form method="POST" style="display: inline;">
                                         <input type="hidden" name="action" value="toggle">
-                                        <input type="hidden" name="id" value="<?php echo $nivel['id']; ?>">
-                                        <input type="hidden" name="activo" value="<?php echo $nivel['activo']; ?>">
-                                        <button type="submit" class="btn btn-sm <?php echo $nivel['activo'] ? 'btn-success' : 'btn-secondary'; ?>" title="<?php echo $nivel['activo'] ? 'Desactivar' : 'Activar'; ?>">
-                                            <i class="fas fa-<?php echo $nivel['activo'] ? 'toggle-on' : 'toggle-off'; ?>"></i>
+                                        <input type="hidden" name="id" value="<?php echo $curso['id']; ?>">
+                                        <input type="hidden" name="activo" value="<?php echo $curso['activo']; ?>">
+                                        <button type="submit" class="btn btn-sm <?php echo $curso['activo'] ? 'btn-success' : 'btn-secondary'; ?>" title="<?php echo $curso['activo'] ? 'Desactivar' : 'Activar'; ?>">
+                                            <i class="fas fa-<?php echo $curso['activo'] ? 'toggle-on' : 'toggle-off'; ?>"></i>
                                         </button>
                                     </form>
                                     
-                                    <button onclick="deleteNivel(<?php echo $nivel['id']; ?>, '<?php echo htmlspecialchars($nivel['nombre']); ?>', <?php echo $nivel['total_cursos']; ?>)" class="btn btn-sm btn-danger" title="Eliminar">
+                                    <button onclick="deleteCurso(<?php echo $curso['id']; ?>, '<?php echo htmlspecialchars($curso['nombre']); ?>', <?php echo $curso['total_modalidades']; ?>)" class="btn btn-sm btn-danger" title="Eliminar">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="nivel-body">
-                                <div class="nivel-description">
-                                    <?php echo !empty($nivel['descripcion']) ? htmlspecialchars($nivel['descripcion']) : '<em>Sin descripción</em>'; ?>
+                            <div class="curso-body">
+                                <div class="curso-nivel">
+                                    <span class="nivel-badge"><?php echo htmlspecialchars($curso['nivel_nombre']); ?></span>
                                 </div>
-                                <div class="nivel-meta">
-                                    <div class="nivel-meta-item">
-                                        <i class="fas fa-graduation-cap"></i>
-                                        <span><?php echo $nivel['total_cursos']; ?> cursos</span>
+                                <div class="curso-description">
+                                    <?php echo !empty($curso['descripcion']) ? htmlspecialchars($curso['descripcion']) : '<em>Sin descripción</em>'; ?>
+                                </div>
+                                <div class="curso-meta">
+                                    <div class="curso-meta-item">
+                                        <i class="fas fa-sitemap"></i>
+                                        <span><?php echo $curso['total_modalidades']; ?> modalidades</span>
                                     </div>
-                                    <div class="nivel-meta-item">
+                                    <div class="curso-meta-item">
                                         <i class="fas fa-calendar-alt"></i>
-                                        <span>Creado: <?php echo isset($nivel['fecha_creacion']) ? date('d/m/Y', strtotime($nivel['fecha_creacion'])) : 'N/A'; ?></span>
+                                        <span>Creado: <?php echo isset($curso['fecha_creacion']) ? date('d/m/Y', strtotime($curso['fecha_creacion'])) : 'N/A'; ?></span>
                                     </div>
-                                    <div class="nivel-meta-item">
-                                        <span class="estado-badge <?php echo $nivel['activo'] ? 'estado-activo' : 'estado-inactivo'; ?>">
-                                            <?php echo $nivel['activo'] ? 'Activo' : 'Inactivo'; ?>
+                                    <div class="curso-meta-item">
+                                        <span class="estado-badge <?php echo $curso['activo'] ? 'estado-activo' : 'estado-inactivo'; ?>">
+                                            <?php echo $curso['activo'] ? 'Activo' : 'Inactivo'; ?>
                                         </span>
                                     </div>
                                 </div>
@@ -400,11 +478,11 @@ if (!empty($niveles)) {
         </main>
     </div>
 
-    <!-- Modal para crear nivel -->
+    <!-- Modal para crear curso -->
     <div id="createModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-plus"></i> Nuevo Nivel Educativo</h3>
+                <h3><i class="fas fa-plus"></i> Nuevo Curso</h3>
                 <button onclick="closeModal('createModal')" class="modal-close">
                     <i class="fas fa-times"></i>
                 </button>
@@ -413,13 +491,25 @@ if (!empty($niveles)) {
                 <input type="hidden" name="action" value="create">
                 
                 <div class="form-group">
-                    <label for="create_nombre">Nombre *</label>
+                    <label for="create_nivel_id">Nivel Educativo *</label>
+                    <select name="nivel_id" id="create_nivel_id" required>
+                        <option value="">Seleccionar nivel</option>
+                        <?php foreach ($niveles as $nivel): ?>
+                            <option value="<?php echo $nivel['id']; ?>">
+                                <?php echo htmlspecialchars($nivel['nombre']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="create_nombre">Nombre del Curso *</label>
                     <input type="text" name="nombre" id="create_nombre" required>
                 </div>
 
                 <div class="form-group">
                     <label for="create_descripcion">Descripción</label>
-                    <textarea name="descripcion" id="create_descripcion" rows="3" placeholder="Descripción del nivel educativo..."></textarea>
+                    <textarea name="descripcion" id="create_descripcion" rows="3" placeholder="Descripción del curso..."></textarea>
                 </div>
 
                 <div class="form-row">
@@ -439,18 +529,18 @@ if (!empty($niveles)) {
                 <div class="form-actions">
                     <button type="button" onclick="closeModal('createModal')" class="btn btn-secondary">Cancelar</button>
                     <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save"></i> Crear Nivel
+                        <i class="fas fa-save"></i> Crear Curso
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal para editar nivel -->
+    <!-- Modal para editar curso -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-edit"></i> Editar Nivel Educativo</h3>
+                <h3><i class="fas fa-edit"></i> Editar Curso</h3>
                 <button onclick="closeModal('editModal')" class="modal-close">
                     <i class="fas fa-times"></i>
                 </button>
@@ -460,7 +550,19 @@ if (!empty($niveles)) {
                 <input type="hidden" name="id" id="edit_id">
                 
                 <div class="form-group">
-                    <label for="edit_nombre">Nombre *</label>
+                    <label for="edit_nivel_id">Nivel Educativo *</label>
+                    <select name="nivel_id" id="edit_nivel_id" required>
+                        <option value="">Seleccionar nivel</option>
+                        <?php foreach ($niveles as $nivel): ?>
+                            <option value="<?php echo $nivel['id']; ?>">
+                                <?php echo htmlspecialchars($nivel['nombre']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_nombre">Nombre del Curso *</label>
                     <input type="text" name="nombre" id="edit_nombre" required>
                 </div>
 
@@ -486,7 +588,7 @@ if (!empty($niveles)) {
                 <div class="form-actions">
                     <button type="button" onclick="closeModal('editModal')" class="btn btn-secondary">Cancelar</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Actualizar Nivel
+                        <i class="fas fa-save"></i> Actualizar Curso
                     </button>
                 </div>
             </form>
@@ -503,7 +605,7 @@ if (!empty($niveles)) {
                 </button>
             </div>
             <div class="modal-body">
-                <p>¿Estás seguro de que deseas eliminar el nivel educativo <strong id="deleteNivelTitle"></strong>?</p>
+                <p>¿Estás seguro de que deseas eliminar el curso <strong id="deleteCursoTitle"></strong>?</p>
                 <p class="warning-text">Esta acción no se puede deshacer.</p>
             </div>
             <form method="POST" class="modal-form">
@@ -519,9 +621,7 @@ if (!empty($niveles)) {
             </form>
         </div>
     </div>
-
     <?php include 'footer.php'; ?>
-
     <script>
         // Funciones para modales
         function openModal(modalId) {
@@ -534,26 +634,27 @@ if (!empty($niveles)) {
             document.body.style.overflow = 'auto';
         }
 
-        // Función para editar nivel
-        function editNivel(nivel) {
-            document.getElementById('edit_id').value = nivel.id;
-            document.getElementById('edit_nombre').value = nivel.nombre;
-            document.getElementById('edit_descripcion').value = nivel.descripcion || '';
-            document.getElementById('edit_orden').value = nivel.orden;
-            document.getElementById('edit_activo').checked = nivel.activo == 1;
+        // Función para editar curso
+        function editCurso(curso) {
+            document.getElementById('edit_id').value = curso.id;
+            document.getElementById('edit_nivel_id').value = curso.nivel_id;
+            document.getElementById('edit_nombre').value = curso.nombre;
+            document.getElementById('edit_descripcion').value = curso.descripcion || '';
+            document.getElementById('edit_orden').value = curso.orden;
+            document.getElementById('edit_activo').checked = curso.activo == 1;
             
             openModal('editModal');
         }
 
-        // Función para eliminar nivel
-        function deleteNivel(id, nombre, totalCursos) {
+        // Función para eliminar curso
+        function deleteCurso(id, nombre, totalModalidades) {
             document.getElementById('delete_id').value = id;
-            document.getElementById('deleteNivelTitle').textContent = nombre;
+            document.getElementById('deleteCursoTitle').textContent = nombre;
             
-            // Actualizar el mensaje según si hay cursos asociados
+            // Actualizar el mensaje según si hay modalidades asociadas
             const warningText = document.querySelector('#deleteModal .warning-text');
-            if (totalCursos > 0) {
-                warningText.innerHTML = `<strong>⚠️ ADVERTENCIA:</strong> Este nivel tiene ${totalCursos} curso(s) asociado(s). Al eliminarlo también se eliminarán todos los cursos, materias, temas y contenidos relacionados. Esta acción no se puede deshacer.`;
+            if (totalModalidades > 0) {
+                warningText.innerHTML = `<strong>⚠️ ADVERTENCIA:</strong> Este curso tiene ${totalModalidades} modalidad(es) asociada(s). Al eliminarlo también se eliminarán todas las modalidades, materias, temas y contenidos relacionados. Esta acción no se puede deshacer.`;
                 warningText.style.color = '#e74c3c';
                 warningText.style.fontWeight = 'bold';
             } else {

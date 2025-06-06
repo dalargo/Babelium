@@ -315,5 +315,6 @@ while ($row = $result->fetch_assoc()) {
           margin-top: 1rem;
       }
   </style>
+  <?php include 'footer.php'; ?>
 </body>
 </html>

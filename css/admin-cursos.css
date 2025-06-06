@@ -1,0 +1,704 @@
+/* Estilos específicos para la gestión de cursos */
+
+/* Variables específicas para cursos */
+:root {
+  --curso-primary: #667eea;
+  --curso-secondary: #764ba2;
+  --curso-success: #28a745;
+  --curso-danger: #dc3545;
+  --curso-warning: #ffc107;
+  --curso-info: #17a2b8;
+  --curso-light: #f8f9fa;
+  --curso-dark: #343a40;
+  --curso-border: #dee2e6;
+  --curso-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --curso-shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --curso-gradient: linear-gradient(135deg, var(--curso-primary), var(--curso-secondary));
+}
+
+/* Filtros específicos para cursos */
+.content-filters {
+  background: var(--curso-light);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--curso-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  overflow: hidden;
+  min-height: fit-content;
+}
+
+.filters-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex: 1;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 160px;
+  flex-shrink: 1;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: var(--curso-dark);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.filter-group select {
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--curso-border);
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: var(--curso-primary);
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.content-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Botones de filtro con tamaño uniforme */
+.filter-actions .btn,
+.content-actions .btn {
+  min-width: 100px;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* Estadísticas específicas para cursos */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--curso-border);
+  box-shadow: var(--curso-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--curso-shadow-lg);
+}
+
+.stat-card.primary {
+  border-left: 4px solid var(--curso-primary);
+}
+
+.stat-card.success {
+  border-left: 4px solid var(--curso-success);
+}
+
+.stat-card.warning {
+  border-left: 4px solid var(--curso-warning);
+}
+
+.stat-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.stat-card.primary .stat-icon {
+  background: var(--curso-gradient);
+}
+
+.stat-card.success .stat-icon {
+  background: var(--curso-success);
+}
+
+.stat-card.warning .stat-icon {
+  background: var(--curso-warning);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--curso-dark);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Grid de cursos */
+.curso-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.curso-card {
+  background: white;
+  border: 1px solid var(--curso-border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: var(--curso-shadow);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.curso-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--curso-shadow-lg);
+  border-color: var(--curso-primary);
+}
+
+.curso-card.inactivo {
+  opacity: 0.7;
+  background: #f8f9fa;
+}
+
+.curso-card.inactivo::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(0, 0, 0, 0.05) 10px,
+    rgba(0, 0, 0, 0.05) 20px
+  );
+  pointer-events: none;
+}
+
+.curso-header {
+  padding: 1.25rem;
+  background: var(--curso-gradient);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.curso-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.orden {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  min-width: 2rem;
+  text-align: center;
+}
+
+.curso-title-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.curso-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.curso-body {
+  padding: 1.25rem;
+}
+
+.curso-nivel {
+  margin-bottom: 1rem;
+}
+
+.nivel-badge {
+  background: var(--curso-info);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.curso-description {
+  color: #6c757d;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.curso-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.curso-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.curso-meta-item i {
+  color: var(--curso-primary);
+  width: 1rem;
+  text-align: center;
+}
+
+.estado-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.estado-activo {
+  background: #d4edda;
+  color: #155724;
+}
+
+.estado-inactivo {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Botones específicos para cursos */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  gap: 0.5rem;
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.btn-primary {
+  background: var(--curso-gradient);
+  color: white;
+  box-shadow: 0 0.25rem 0.75rem rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0.375rem 1rem rgba(102, 126, 234, 0.4);
+  color: white;
+  text-decoration: none;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+  color: white;
+  text-decoration: none;
+}
+
+.btn-success {
+  background: var(--curso-success);
+  color: white;
+}
+
+.btn-success:hover {
+  background: #218838;
+  color: white;
+  text-decoration: none;
+}
+
+.btn-danger {
+  background: var(--curso-danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #c82333;
+  color: white;
+  text-decoration: none;
+}
+
+/* Modales específicos para cursos */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 0.75rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--curso-shadow-lg);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.modal-content.modal-small {
+  max-width: 400px;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-header {
+  background: var(--curso-gradient);
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0.75rem 0.75rem 0 0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+  color: white;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-form {
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--curso-dark);
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--curso-border);
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--curso-primary);
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.checkbox-label {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500 !important;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: auto !important;
+  margin: 0;
+  transform: scale(1.2);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid var(--curso-border);
+}
+
+.warning-text {
+  color: #856404;
+  background: #fff3cd;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ffeaa7;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Estado sin datos */
+.no-data {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6c757d;
+}
+
+.no-data i {
+  font-size: 4rem;
+  color: var(--curso-border);
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.no-data p {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--curso-dark);
+}
+
+.no-data small {
+  font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .content-filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .filters-form {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .filter-group {
+    min-width: auto;
+  }
+
+  .filter-actions,
+  .content-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-filters {
+    padding: 1rem;
+  }
+
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+
+  .curso-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .curso-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .curso-actions {
+    justify-content: center;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .modal-content {
+    width: 95%;
+    margin: 1rem;
+  }
+
+  .filter-actions .btn,
+  .content-actions .btn {
+    min-width: 80px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .curso-card {
+    margin: 0 0.5rem;
+  }
+
+  .modal-header {
+    padding: 1rem;
+  }
+
+  .modal-form,
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .curso-meta {
+    gap: 0.75rem;
+  }
+
+  .curso-meta-item {
+    font-size: 0.8rem;
+  }
+
+  .filter-actions .btn,
+  .content-actions .btn {
+    min-width: 70px;
+    padding: 0.375rem 0.5rem;
+  }
+}
+
+/* Animaciones */
+.curso-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mejoras de accesibilidad */
+.btn:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: 2px solid var(--curso-primary);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Estados de hover mejorados */
+.curso-card:hover .curso-header {
+  background: linear-gradient(135deg, #5a6fd8, #6b5b95);
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.1);
+}

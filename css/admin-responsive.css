@@ -1,0 +1,136 @@
+/* Estilos para hacer el sidebar responsive */
+.sidebar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-right: 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.sidebar-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+
+/* Clase para mostrar el sidebar */
+.admin-sidebar.show {
+  transform: translateX(0) !important;
+}
+
+/* Estilos para el header responsive */
+.admin-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-nav {
+  display: flex;
+  justify-content: center;
+}
+
+.admin-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.admin-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+}
+
+/* Media queries */
+@media (max-width: 1024px) {
+  .sidebar-toggle {
+    display: flex;
+    align-items: center;
+  }
+
+  .admin-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+  }
+
+  .admin-main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .sidebar-overlay.show {
+    display: block;
+  }
+
+  /* Ajuste para el logo en móvil */
+  .logo span:not(.admin-badge) {
+    display: none;
+  }
+
+  /* Ajuste para la navegación en móvil */
+  .admin-nav ul {
+    gap: 1rem;
+  }
+
+  .admin-nav a span {
+    display: inline-block; /* Mostrar el texto */
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-header-top {
+    padding: 0 0.5rem;
+  }
+
+  .user-button span {
+    display: none;
+  }
+
+  .admin-nav ul {
+    gap: 0.75rem;
+  }
+
+  .admin-nav a span {
+    display: none; /* Ocultar texto en pantallas más pequeñas */
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-badge {
+    display: none;
+  }
+
+  .admin-nav ul {
+    gap: 0.5rem;
+  }
+}

@@ -289,6 +289,8 @@ while ($row = $result->fetch_assoc()) {
       </main>
   </div>
 
+  <?php include 'footer.php'; ?>
+
   <script>
       function toggleCreateForm() {
           const form = document.getElementById('createForm');

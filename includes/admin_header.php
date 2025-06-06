@@ -6,10 +6,34 @@ require_once __DIR__ . '/auth_check.php';
 
 $usuario_actual = obtenerUsuarioActual();
 ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Babelium</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="../css/admin-common.css">
+    <link rel="stylesheet" href="../css/admin-responsive.css">
+    <!-- Estilos específicos de la página (si existen) -->
+    <?php if (isset($pagina_css)): ?>
+    <link rel="stylesheet" href="../css/<?php echo $pagina_css; ?>">
+    <?php endif; ?>
+</head>
+<body>
+<!-- Overlay para el sidebar en móvil -->
+<div class="sidebar-overlay"></div>
 
 <header class="admin-header-top">
     <!-- Izquierda -->
     <div class="logo">
+        <!-- Botón de hamburguesa para móvil -->
+        <button id="sidebarToggle" class="sidebar-toggle" aria-label="Mostrar/ocultar menú">
+            <i class="fas fa-bars"></i>
+        </button>
+        
         <i class="fas fa-book-open"></i>
         <a href="../index.php"><span>Babelium</span></a>
         <span class="admin-badge">Admin</span>
@@ -18,8 +42,8 @@ $usuario_actual = obtenerUsuarioActual();
     <!-- Centro -->
     <nav class="admin-nav">
         <ul>
-            <li><a href="../index.php"><i class="fas fa-home"></i> Sitio Web</a></li>
-            <li><a href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="../index.php"><i class="fas fa-home"></i> <span>Sitio Web</span></a></li>
+            <li><a href="dashboard.php"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
         </ul>
     </nav>
 
@@ -38,7 +62,7 @@ $usuario_actual = obtenerUsuarioActual();
                     <small>Administrador</small>
                 </div>
                 <div class="dropdown-divider"></div>
-                <a href="../perfil.php" class="dropdown-item">
+                <a href="../admin/perfil.php" class="dropdown-item">
                     <i class="fas fa-user"></i> Mi Perfil
                 </a>
                 <a href="configuracion.php" class="dropdown-item">

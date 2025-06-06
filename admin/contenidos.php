@@ -594,6 +594,8 @@ try {
         </div>
     </div>
 
+    <?php include 'footer.php'; ?>
+    
     <script>
         // Funciones para modales
         function openModal(modalId) {

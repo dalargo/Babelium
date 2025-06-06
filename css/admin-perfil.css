@@ -1,0 +1,759 @@
+/* Estilos específicos para la página de perfil del administrador */
+
+/* Variables específicas para perfil */
+:root {
+  --perfil-primary: #667eea;
+  --perfil-secondary: #764ba2;
+  --perfil-success: #28a745;
+  --perfil-danger: #dc3545;
+  --perfil-warning: #ffc107;
+  --perfil-info: #17a2b8;
+  --perfil-light: #f8f9fa;
+  --perfil-dark: #343a40;
+  --perfil-border: #dee2e6;
+  --perfil-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --perfil-shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --perfil-gradient: linear-gradient(135deg, var(--perfil-primary), var(--perfil-secondary));
+  --perfil-card-bg: #ffffff;
+  --perfil-text-muted: #6c757d;
+}
+
+/* Layout principal */
+.perfil-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  min-height: calc(100vh - 200px);
+}
+
+/* Header del perfil */
+.perfil-header {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: var(--perfil-gradient);
+  border-radius: 1rem;
+  color: white;
+  box-shadow: var(--perfil-shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.perfil-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+
+.perfil-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+.perfil-header p {
+  font-size: 1.2rem;
+  margin: 0;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+/* Card de foto de perfil */
+.foto-perfil-card {
+  background: var(--perfil-card-bg);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: var(--perfil-shadow-lg);
+  border: 1px solid var(--perfil-border);
+  text-align: center;
+  height: fit-content;
+  position: sticky;
+  top: 2rem;
+}
+
+.foto-perfil-container {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
+
+.foto-perfil {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--perfil-primary);
+  box-shadow: 0 0.5rem 1.5rem rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.foto-perfil:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0.75rem 2rem rgba(102, 126, 234, 0.4);
+}
+
+.foto-placeholder {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: var(--perfil-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 4rem;
+  border: 4px solid var(--perfil-primary);
+  box-shadow: 0 0.5rem 1.5rem rgba(102, 126, 234, 0.3);
+}
+
+.cambiar-foto-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: var(--perfil-primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0.25rem 0.75rem rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+}
+
+.cambiar-foto-btn:hover {
+  background: var(--perfil-secondary);
+  transform: scale(1.1);
+}
+
+.foto-info {
+  color: var(--perfil-text-muted);
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  line-height: 1.5;
+}
+
+/* Card de información del perfil */
+.info-perfil-card {
+  background: var(--perfil-card-bg);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: var(--perfil-shadow-lg);
+  border: 1px solid var(--perfil-border);
+}
+
+.info-perfil-card h2 {
+  color: var(--perfil-dark);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--perfil-border);
+}
+
+.info-perfil-card h2 i {
+  color: var(--perfil-primary);
+}
+
+/* Formulario de perfil */
+.perfil-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 700;
+  color: var(--perfil-dark);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-group label i {
+  color: var(--perfil-primary);
+  width: 1rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--perfil-border);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--perfil-primary);
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  transform: translateY(-1px);
+}
+
+.form-group input:disabled {
+  background: var(--perfil-light);
+  color: var(--perfil-text-muted);
+  cursor: not-allowed;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.btn-primary {
+  background: var(--perfil-gradient);
+  color: white;
+  box-shadow: 0 0.25rem 0.75rem rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: var(--perfil-text-muted);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background: var(--perfil-success);
+  color: white;
+}
+
+.btn-success:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: var(--perfil-danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Acciones del formulario */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--perfil-border);
+  margin-top: 1rem;
+}
+
+/* Modal para cambiar foto */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--perfil-shadow-lg);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-header {
+  background: var(--perfil-gradient);
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 1rem 1rem 0 0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+  color: white;
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+/* Upload de archivo */
+.file-upload-area {
+  border: 2px dashed var(--perfil-border);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+}
+
+.file-upload-area:hover {
+  border-color: var(--perfil-primary);
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.file-upload-area.dragover {
+  border-color: var(--perfil-primary);
+  background: rgba(102, 126, 234, 0.1);
+  transform: scale(1.02);
+}
+
+.upload-icon {
+  font-size: 3rem;
+  color: var(--perfil-primary);
+  margin-bottom: 1rem;
+}
+
+.upload-text {
+  color: var(--perfil-dark);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.upload-hint {
+  color: var(--perfil-text-muted);
+  font-size: 0.9rem;
+}
+
+.file-input {
+  display: none;
+}
+
+/* Preview de imagen */
+.image-preview {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.preview-image {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 0.5rem;
+  box-shadow: var(--perfil-shadow);
+  border: 2px solid var(--perfil-border);
+}
+
+/* Alertas */
+.alert {
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert i {
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.alert-warning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeaa7;
+}
+
+.alert-info {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+}
+
+/* Información adicional */
+.info-adicional {
+  background: var(--perfil-light);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  margin-top: 1.5rem;
+  border-left: 4px solid var(--perfil-primary);
+}
+
+.info-adicional h3 {
+  color: var(--perfil-dark);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-adicional h3 i {
+  color: var(--perfil-primary);
+}
+
+.info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 0.5rem;
+  border: 1px solid var(--perfil-border);
+}
+
+.info-item i {
+  color: var(--perfil-primary);
+  width: 1.25rem;
+  text-align: center;
+}
+
+.info-label {
+  font-weight: 600;
+  color: var(--perfil-dark);
+  min-width: 120px;
+}
+
+.info-value {
+  color: var(--perfil-text-muted);
+  flex: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .perfil-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .foto-perfil-card {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .perfil-container {
+    padding: 1rem;
+  }
+
+  .perfil-header {
+    padding: 1.5rem;
+  }
+
+  .perfil-header h1 {
+    font-size: 2rem;
+  }
+
+  .perfil-header p {
+    font-size: 1rem;
+  }
+
+  .foto-perfil-card,
+  .info-perfil-card {
+    padding: 1.5rem;
+  }
+
+  .foto-perfil,
+  .foto-placeholder {
+    width: 150px;
+    height: 150px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .perfil-header {
+    padding: 1rem;
+  }
+
+  .perfil-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .foto-perfil-card,
+  .info-perfil-card {
+    padding: 1rem;
+  }
+
+  .foto-perfil,
+  .foto-placeholder {
+    width: 120px;
+    height: 120px;
+  }
+
+  .foto-placeholder {
+    font-size: 3rem;
+  }
+
+  .cambiar-foto-btn {
+    width: 35px;
+    height: 35px;
+    bottom: 5px;
+    right: 5px;
+  }
+
+  .modal-content {
+    width: 95%;
+    margin: 1rem;
+  }
+
+  .modal-header {
+    padding: 1rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .file-upload-area {
+    padding: 1.5rem;
+  }
+
+  .upload-icon {
+    font-size: 2.5rem;
+  }
+}
+
+/* Animaciones adicionales */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.foto-perfil-card,
+.info-perfil-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.foto-perfil-card {
+  animation-delay: 0.1s;
+  animation-fill-mode: both;
+}
+
+.info-perfil-card {
+  animation-delay: 0.2s;
+  animation-fill-mode: both;
+}
+
+/* Efectos hover mejorados */
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: rgba(102, 126, 234, 0.5);
+}
+
+.info-item:hover {
+  background: rgba(102, 126, 234, 0.05);
+  transform: translateX(5px);
+}
+
+/* Loading state */
+.btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+.btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mejoras de accesibilidad */
+.btn:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: 2px solid var(--perfil-primary);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Scrollbar personalizado */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--perfil-primary);
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--perfil-secondary);
+}
