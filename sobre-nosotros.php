@@ -311,28 +311,29 @@
                         <!-- Cuerpo/Camisa -->
                         <ellipse cx="150" cy="280" rx="80" ry="40" fill="url(#shirtGradient)"/>
                         
-                        <!-- Cuello -->
-                        <rect x="135" y="240" width="30" height="40" fill="#f4c2a1" rx="15"/>
+                        <!-- Cuello (ajustado) -->
+                        <!-- Cuello (ajustado y color igualado al de la cabeza) -->
+                        <rect x="135" y="205" width="30" height="45" fill="#b87e4c" rx="15"/>
                         
                         <!-- Cara -->
-                        <circle cx="150" cy="180" r="50" fill="#f4c2a1"/>
+                        <circle cx="150" cy="180" r="50" fill="#b87e4c"/>
                         
                         <!-- Cabello -->
-                        <path d="M 100 160 Q 150 120 200 160 Q 200 140 150 130 Q 100 140 100 160" fill="#8b4513"/>
+                        <path d="M 100 160 Q 150 120 200 160 Q 200 140 150 130 Q 100 140 100 160" fill="#000000"/>
                         
                         <!-- Ojos -->
                         <circle cx="135" cy="175" r="3" fill="#333"/>
                         <circle cx="165" cy="175" r="3" fill="#333"/>
                         
                         <!-- Cejas -->
-                        <path d="M 128 168 Q 135 165 142 168" stroke="#8b4513" stroke-width="2" fill="none"/>
-                        <path d="M 158 168 Q 165 165 172 168" stroke="#8b4513" stroke-width="2" fill="none"/>
+                        <path d="M 128 168 Q 135 165 142 168" stroke="#000000" stroke-width="2" fill="none"/>
+                        <path d="M 158 168 Q 165 165 172 168" stroke="#000000" stroke-width="2" fill="none"/>
                         
                         <!-- Nariz -->
-                        <ellipse cx="150" cy="185" rx="2" ry="4" fill="#e6a885"/>
+                        <ellipse cx="150" cy="185" rx="2" ry="4" fill="#b3865c"/>
                         
                         <!-- Boca -->
-                        <path d="M 142 195 Q 150 200 158 195" stroke="#d4956b" stroke-width="2" fill="none"/>
+                        <path d="M 142 195 Q 150 200 158 195" stroke="#9c6f4a" stroke-width="2" fill="none"/>
                         
                         <!-- Gafas (opcional, para look de desarrollador) -->
                         <circle cx="135" cy="175" r="15" fill="none" stroke="#333" stroke-width="2"/>
@@ -375,6 +376,7 @@
                             </circle>
                         </g>
                     </svg>
+
                     <div class="creator-badge">
                         <i class="fas fa-code"></i>
                     </div>

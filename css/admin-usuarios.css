@@ -64,6 +64,16 @@
   background-color: #5a6268;
 }
 
+.btn-danger {
+  background-color: var(--admin-danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+}
+
+/* ESTILOS PARA MODALES - CENTRADOS */
 .form-container {
   position: fixed;
   top: 0;
@@ -76,6 +86,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 .form-card {
@@ -85,6 +96,24 @@
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: modalFadeIn 0.3s ease;
+}
+
+/* Modal pequeño para confirmaciones */
+.form-card[style*="max-width: 400px"] {
+  max-width: 400px !important;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .form-header {
@@ -93,11 +122,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 8px 8px 0 0;
 }
 
 .form-header h3 {
   margin: 0;
   color: var(--admin-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .close-btn {
@@ -106,6 +140,14 @@
   font-size: 1.2rem;
   cursor: pointer;
   color: #666;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background-color: #e9ecef;
+  color: var(--admin-primary);
 }
 
 .admin-form {
@@ -136,6 +178,7 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
+  transition: border-color 0.3s ease;
 }
 
 .form-group input:focus,
@@ -149,11 +192,26 @@
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
+  padding: none !important;
   border-top: 1px solid #e9ecef;
 }
 
+/* ESTILOS ESPECÍFICOS PARA MODAL DE ELIMINACIÓN */
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-body p {
+  margin-bottom: 1rem;
+  color: var(--admin-primary);
+  line-height: 1.5;
+}
+
+.modal-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ESTILOS PARA LA TABLA */
 .table-container {
   background: white;
   border-radius: 8px;
@@ -177,6 +235,10 @@
   background-color: #f8f9fa;
   font-weight: 600;
   color: var(--admin-primary);
+}
+
+.admin-table tbody tr:hover {
+  background-color: #f8f9fa;
 }
 
 .user-cell {
@@ -260,6 +322,7 @@
 
 .btn-edit:hover {
   background-color: #e67e22;
+  transform: translateY(-1px);
 }
 
 .btn-delete {
@@ -269,11 +332,44 @@
 
 .btn-delete:hover {
   background-color: #c0392b;
+  transform: translateY(-1px);
 }
 
+/* RESPONSIVE PARA MODALES */
 @media (max-width: 768px) {
+  .form-container {
+    padding: 1rem;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .form-card {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+
+  .form-header {
+    padding: 1rem;
+  }
+
+  .admin-form {
+    padding: 1rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .admin-table {
@@ -284,4 +380,90 @@
   .admin-table td {
     padding: 0.75rem 0.5rem;
   }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    padding: 0.5rem;
+  }
+
+  .form-header h3 {
+    font-size: 1rem;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .user-cell {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .action-buttons {
+    justify-content: center;
+  }
+}
+
+/* ESTILOS ADICIONALES PARA MEJORAR LA EXPERIENCIA */
+.form-container {
+  backdrop-filter: blur(2px);
+}
+
+.form-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-card::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.form-card::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.form-card::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Efecto de enfoque para accesibilidad */
+.btn:focus,
+.btn-icon:focus,
+.close-btn:focus {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 2px;
+}
+
+/* Animación para los botones de acción */
+.btn-icon {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-icon::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+}
+
+.btn-icon:hover::before {
+  width: 100%;
+  height: 100%;
 }

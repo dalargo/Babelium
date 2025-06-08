@@ -349,7 +349,7 @@
 }
 
 .materia-footer {
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
   text-align: center;
 }
 
@@ -365,8 +365,9 @@
   font-weight: 600;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  width: 100%;
+  width: auto;
   justify-content: center;
+  margin: auto;
 }
 
 .materia-button:hover {
@@ -391,8 +392,8 @@
 }
 
 .no-materias i {
-  font-size: 4rem;
-  margin-bottom: var(--spacing-md);
+  font-size: 4rem !important;
+  /* margin-bottom: var(--spacing-md); */
   color: var(--accent-color);
 }
 
@@ -414,7 +415,6 @@
   font-weight: 600;
   margin-top: var(--spacing-md);
   transition: all 0.3s ease;
-  line-height: 1;
 }
 
 .back-button:hover {
@@ -424,7 +424,7 @@
 }
 
 .back-button i {
-  font-size: 1em;
+  font-size: 1rem;
   line-height: 1;
   vertical-align: middle;
 }

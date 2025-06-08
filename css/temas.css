@@ -458,7 +458,7 @@
 
 .no-temas i {
   font-size: 4rem;
-  margin-bottom: var(--spacing-md);
+  /* margin-bottom: var(--spacing-md); */
   color: var(--accent-color);
 }
 
